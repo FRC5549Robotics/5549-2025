@@ -104,4 +104,15 @@ public final class Constants {
   public static final double kAcceleration = 4;
 
   public static final int RESET_NAVX_BUTTON = 4;
+
+  public static enum Mode {
+    /** Running on a real robot. */
+    REAL,
+
+    /** Running a physics simulator. */
+    SIM,
+
+    /** Replaying from a log file. */
+    REPLAY
+  }
 }

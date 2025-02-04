@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 
 
+
 @SuppressWarnings("PMD.ExcessiveImports")
 public class DrivetrainSubsystem extends SubsystemBase {
 
@@ -315,7 +316,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void brake() {
     for (SwerveModule module : modules) {
-      module.setDesiredState(new SwerveModuleState(0, module.getState().angle));
+      module.setDesiredState(new SwerveModuleState(0, new Rotation2d(0)));
     }
   }
 

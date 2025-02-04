@@ -2,9 +2,10 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.studica.frc.AHRS;
 
-
+import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -72,7 +73,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   //target pose and controller
   Pose2d m_targetPose;
-  PIDController m_thetaController = new PIDController(1.0, 0.0, 0.05);
+  PIDController m_thetaController = new PIDController(0.5, 0.0, 0.0);
+  PIDController m_translationController = new PIDController(0.5,0,0);
 
   ChassisSpeeds speeds; 
   Field2d m_field;
@@ -90,10 +92,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // }
 
     for (int i = 0; i < 4; i++) {
-      if (i != 2) {
-        modules[i].resetDistance();
-        modules[i].syncTurningEncoders();
-      }
+      modules[i].resetDistance();
+      modules[i].syncTurningEncoders();
+      
+      new WaitCommand(1);
+      System.out.println("Module" + i + "is synced to" + modules[i].getTurnCANcoderAngle() + "  " + modules[i].getTurnEncoder().getPosition());
     }
 
     m_targetPose = m_odometry.getPoseMeters();
@@ -117,10 +120,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // }
 
     for (int i = 0; i < 4; i++) {
-      if (i != 2) {
-        modules[i].resetDistance();
-        modules[i].syncTurningEncoders();
-      }
+      modules[i].resetDistance();
+      modules[i].syncTurningEncoders();
     }
   }
   
@@ -172,12 +173,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
       m_ahrs.zeroYaw();
       System.out.println("Zeroed: " + getHeading());
     }
-
-    // System.out.println(getPose());
  
     SmartDashboard.putNumber("Pitch", m_ahrs.getPitch());
     SmartDashboard.putNumber("Roll", m_ahrs.getRoll());
     SmartDashboard.putNumber("Yaw", m_ahrs.getYaw());
+
   }
 
   public void updateOdometry() {
@@ -419,4 +419,32 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_rearRight.getState());
   }
 
+  public void followTrajectory(Optional<SwerveSample> optionalSample) {
+    SwerveSample sample = optionalSample.get();
+    System.out.print("x:" + sample.x);
+    System.out.print(" y:" + sample.y);
+    System.out.print(" theta:" + sample.heading);
+    System.out.print(" vx:" + sample.vx);
+    System.out.print(" vy:" + sample.vy);
+    System.out.println(" omega:" + sample.omega);
+    // Get the current pose of the robot
+    Pose2d pose = getPose();
+
+    // Generate the next speeds for the robot
+    ChassisSpeeds speeds = new ChassisSpeeds(
+        -sample.vx - m_translationController.calculate(pose.getX(), sample.x),
+        -sample.vy - m_translationController.calculate(pose.getY(), sample.y),
+        sample.omega //+ m_thetaController.calculate(pose.getRotation().getRadians(), sample.heading)
+    );
+
+    // Apply the generated speeds
+    drive(speeds, true);
+  }
+  
+  // public void snapWheels(){
+  //   for (SwerveModule swerveModule : modules) {
+  //     double positionMod = ((swerveModule.getTurnEncoder().getPosition() % 360) + 360) % 360;
+  //     swerveModule.getTurnMotor().getClosedLoopController().setReference(0, ControlType.kPosition);
+  //   }
+  // }
 }

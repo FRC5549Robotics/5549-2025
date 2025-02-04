@@ -5,14 +5,26 @@
 package frc.robot;
 
 
+import java.util.Optional;
+
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
+import choreo.Choreo;
+import choreo.auto.AutoFactory;
+import choreo.trajectory.SwerveSample;
+import choreo.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.DriveAuton;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
@@ -31,7 +43,9 @@ public class RobotContainer {
   private final AHRS m_ahrs = new AHRS(NavXComType.kMXP_SPI);
   public final DrivetrainSubsystem m_drive = new DrivetrainSubsystem(m_ahrs);
   //endregion
-
+  //region Trajectories
+  Optional<Trajectory<SwerveSample>> testT = Choreo.loadTrajectory("Test");
+  //endregion
   JoystickButton resetNavXButton = new JoystickButton(m_controller.getHID(), Constants.RESET_NAVX_BUTTON);
 
   public RobotContainer() {
@@ -64,6 +78,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    Timer timer = new Timer();
+    timer.start();
+    return new DriveAuton(m_drive, timer, testT);
   }
 }

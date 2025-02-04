@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.io.Console;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -51,44 +52,6 @@ public class SwerveModule extends SubsystemBase {
                         int driveMotorChannel,
                         int turningMotorChannel,
                         int turningCANCoderChannel) {
-        // m_turningController = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
-        // m_turningController.restoreFactoryDefaults();
-        // m_turningController.setIdleMode(IdleMode.kBrake);
-        // m_turningController.setSmartCurrentLimit(40);
-        // m_turningController.burnFlash();
-        // Timer.delay(0.5);
-
-
-        // Timer.delay(1);
-        // System.out.println("initialized");
-        // m_turningCANCoder = new CANcoder(turningCANCoderChannel);
-    
-        // m_turningCANCoder.setPosition(m_turningCANCoder.getAbsolutePosition().getValueAsDouble());
-        // // m_turningCANCoder.setPosition(0);        
-        // m_turningEncoder = m_turningController.getEncoder();
-
-        // // m_CANCoderOffset = Rotation2d.fromDegrees(turningCANCoderOffsetDegrees);
-
-        // // m_driveController.setIdleMode(IdleMode.kBrake);
-        // // m_turningController.setIdleMode(IdleMode.kCoast);
-
-        // m_turningController.setIdleMode(IdleMode.kBrake);
-        // m_turningController.setSmartCurrentLimit(40);
-
-        // // m_driveEncoder returns RPM by default. Use setVelocityConversionFactor() to
-        // // convert that to meters per second.
-
-        // m_turningEncoder.setPositionConversionFactor(360.0 / Constants.kTurnPositionConversionFactor);
-
-        // m_turningController = m_turningController.getPIDController();
-
-
-        // m_turningController.setP(Constants.kTurningP);
-        // m_turningController.setI(Constants.kTurningI);
-        // m_turningController.setD(Constants.kTurningD);
-
-        // 401 only sets P of the drive PID
-
         m_driveController = new SparkMax(driveMotorChannel, MotorType.kBrushless);
         m_turningController = new SparkMax(turningMotorChannel, MotorType.kBrushless);
         m_driveConfig = new SparkMaxConfig();
@@ -107,10 +70,6 @@ public class SwerveModule extends SubsystemBase {
         m_driveController.configure(m_driveConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
         m_turningController.configure(m_turningConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
         
-
-    
-        
-        
         // 401 only sets P of the drive PID
 
         Timer.delay(0.5);
@@ -119,7 +78,6 @@ public class SwerveModule extends SubsystemBase {
         Timer.delay(1);
         System.out.println("initialized");
         m_turningCANCoder = new CANcoder(turningCANCoderChannel);
-    
         m_turningCANCoder.setPosition(m_turningCANCoder.getAbsolutePosition().getValueAsDouble());
         // m_turningCANCoder.setPosition(0);        
         m_turningEncoder = m_turningController.getEncoder();
@@ -172,7 +130,7 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public double getTurnCANcoderAngle() {
-        return m_turningCANCoder.getAbsolutePosition().getValueAsDouble();
+        return m_turningCANCoder.getAbsolutePosition().getValueAsDouble()*360;
     }
 
     public Rotation2d adjustedAngle = new Rotation2d();

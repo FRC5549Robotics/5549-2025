@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -19,20 +20,20 @@ public final class Constants {
   public static final int DRIVE_CONTROLLER = 0;
   public static final int OPERATOR_CONTROLLER = 1;
 
-  public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2; 
-  public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 3;
-  public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 13; 
+  public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 4; 
+  public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 5;
+  public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 10; 
 
-  public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 4;  
-  public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 5;
-  public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 10; 
+  public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 2;  
+  public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 3;
+  public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 13; 
 
-  public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 8; 
-  public static final int BACK_LEFT_MODULE_STEER_MOTOR = 9; 
+  public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 6; 
+  public static final int BACK_LEFT_MODULE_STEER_MOTOR = 7; 
   public static final int BACK_LEFT_MODULE_STEER_ENCODER = 11; 
 
-  public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 6; 
-  public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 7; 
+  public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 8; 
+  public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 9; 
   public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 12;  
 
   // Define the conventional order of our modules when putting them into arrays
@@ -63,10 +64,10 @@ public final class Constants {
   public static final double kMaxSpeedMetersPerSecond = 4;
   // Units are meters.
   // Distance between centers of right and left wheels on robot
-  public static final double kTrackWidth = 0.56515;
+  public static final double kTrackWidth = 0.51435;
   
   // Distance between front and back wheels on robot
-  public static final double kWheelBase = 0.56515;
+  public static final double kWheelBase = 0.51435;
 
   // Units are meters per second
   public static final double kMaxTranslationalVelocity = 6784 / 60.0 *
@@ -104,6 +105,9 @@ public final class Constants {
   public static final double kAcceleration = 4;
 
   public static final int RESET_NAVX_BUTTON = 4;
+
+  public static final Mode simMode = Mode.SIM;
+  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
   public static enum Mode {
     /** Running on a real robot. */

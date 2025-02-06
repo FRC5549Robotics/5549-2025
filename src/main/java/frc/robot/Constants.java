@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -104,6 +105,10 @@ public final class Constants {
   public static final double kAcceleration = 4;
 
   public static final int RESET_NAVX_BUTTON = 4;
+
+  public static final Mode simMode = Mode.REPLAY;
+  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+
 
   public static enum Mode {
     /** Running on a real robot. */

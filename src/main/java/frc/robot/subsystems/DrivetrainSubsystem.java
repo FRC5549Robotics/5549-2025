@@ -189,7 +189,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
 
-  public double getTranlationalVelocity() {
+  public double getTranslationalVelocity() {
     return Math.hypot(this.speeds.vxMetersPerSecond, this.speeds.vyMetersPerSecond);
   }
   /**

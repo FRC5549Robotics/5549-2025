@@ -18,7 +18,8 @@ public class DriveCommand extends Command {
     private CommandXboxController m_controller;
 
     // The subsystem the command runs on
-    public final DrivetrainSubsystem drivetrain;
+    public final 
+    DrivetrainSubsystem drivetrain;
 
     public DriveCommand(DrivetrainSubsystem subsystem, CommandXboxController controller){
         drivetrain = subsystem;

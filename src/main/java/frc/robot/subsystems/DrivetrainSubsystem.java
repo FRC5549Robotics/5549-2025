@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Optional;
 
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -152,7 +154,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("currentY", getPose().getY());
     SmartDashboard.putNumber("currentAngle", getPose().getRotation().getRadians());
     SmartDashboard.putNumber("targetPoseAngle", m_targetPose.getRotation().getRadians());
-
+    
     // This was due to pinion slippage: If it is still happening, uncomment this code
     // if(Math.abs(m_frontRight.getTurnEncoder().getPosition() - m_frontRight.getTurnCANcoderAngle()) > 2){
     //   m_frontRight.getTurnEncoder().setPosition(m_frontRight.getTurnCANcoderAngle());
@@ -447,5 +449,38 @@ public class DrivetrainSubsystem extends SubsystemBase {
   //     double positionMod = ((swerveModule.getTurnEncoder().getPosition() % 360) + 360) % 360;
   //     swerveModule.getTurnMotor().getClosedLoopController().setReference(0, ControlType.kPosition);
   //   }
+  // }
+
+  // public ArrayList<Double> processControllerInputs(ArrayList<Double> controllerSpeeds){
+  //   ArrayList<Double> adjustedSpeeds = new ArrayList<>();
+  //   Iterator<Double> speedsIterator = controllerSpeeds.iterator();
+  //   while(true){
+  //     if(speedsIterator.hasNext()){
+  //       Double speed = speedsIterator.next();
+  //       if(speed < 0){
+  //         speed = -(speed * speed * Constants.kMaxTranslationalVelocity);
+  //       }
+  //       else{
+  //         speed = speed * speed * Constants.kMaxTranslationalVelocity;
+  //       }
+  //       if(Math.abs(speed)<=0.07*0.07*Constants.kMaxTranslationalVelocity){
+  //         speed = 0.0;
+  //       }
+  //       else{
+  //         if(speed > 0){
+  //           speed -= (0.07*0.07);
+  //         }
+  //         else{
+  //           speed += (0.07*0.07);
+  //         }
+  //         speed *= 1/(1-(0.07*0.07));
+  //       }
+  //       adjustedSpeeds.add(speed);
+  //     }
+  //     else{
+  //       break;
+  //     }
+  //   }
+  //   return adjustedSpeeds;
   // }
 }

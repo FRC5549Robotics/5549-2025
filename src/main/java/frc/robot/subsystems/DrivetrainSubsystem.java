@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.ObjectIdGenerators.None;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.studica.frc.AHRS;
 
@@ -24,6 +25,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import java.util.ArrayList;
+import java.util.List;
+
 import frc.robot.Constants;
 
 
@@ -398,6 +403,51 @@ public class DrivetrainSubsystem extends SubsystemBase {
       calc_yaw += 360.0;
     }
     return Rotation2d.fromDegrees(calc_yaw);
+  }
+
+  public static List<Double> generateSpeeds(boolean[] bool_values, double[] controllerVals) {
+
+    double xDot = 0;
+    double yDot = 0;
+    double thetaDot =0;
+
+    List<Double> mutableVals = new ArrayList<>();
+    mutableVals.add(xDot);
+    mutableVals.add(yDot);
+    mutableVals.add(thetaDot);
+
+
+    for (int i = 0; i < 3; i ++) {
+      if (!bool_values[i]) {
+        mutableVals.set(i, null);
+        continue;
+      }
+      
+      double Dot;
+      if(controllerVals[i] < 0){
+        Dot = -(controllerVals[i]*controllerVals[i]*Constants.kMaxTranslationalVelocity);
+      }
+      else{
+        Dot = (controllerVals[i]*controllerVals[i]) * Constants.kMaxTranslationalVelocity;
+      }
+
+      if(Math.abs(Dot)<=0.07*0.07*Constants.kMaxTranslationalVelocity){
+        Dot = 0;
+      }
+      else{
+        if(Dot > 0){
+          Dot -= (0.07*0.07);
+        }
+        else{
+          Dot += (0.07*0.07);
+        }
+        Dot *= 1/(1-(0.07*0.07));
+      }
+      mutableVals.set(i, Dot);
+
+    }
+
+    return mutableVals;
   }
   
 

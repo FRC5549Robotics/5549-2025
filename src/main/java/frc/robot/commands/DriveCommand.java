@@ -6,7 +6,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.Constants;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
-import java.lang.Math; 
+import java.lang.Math;
+import java.util.ArrayList;
+import java.util.List; 
 
 public class DriveCommand extends Command {
 
@@ -34,66 +36,19 @@ public class DriveCommand extends Command {
             
     @Override
     public void execute() {
-      if(m_controller.getLeftY() < 0){
-        xDot = -(m_controller.getLeftY()*m_controller.getLeftY()*Constants.kMaxTranslationalVelocity);
-      }
-      else{
-        xDot = (m_controller.getLeftY()*m_controller.getLeftY()) * Constants.kMaxTranslationalVelocity;
-      }
-      if(m_controller.getLeftX() < 0){
-        yDot = -(m_controller.getLeftX()*m_controller.getLeftX()*Constants.kMaxTranslationalVelocity);
-      }
-      else{
-        yDot = (m_controller.getLeftX()*m_controller.getLeftX()) * Constants.kMaxTranslationalVelocity;
-      }
-      if(m_controller.getRightX() < 0){
-        thetaDot = -(m_controller.getRightX()*m_controller.getRightX()*Constants.kMaxRotationalVelocity);
-      }
-      else{
-        thetaDot = (m_controller.getRightX()*m_controller.getRightX()) * Constants.kMaxRotationalVelocity;
-      }
-
+      double[] controllerVals = {m_controller.getLeftY(), m_controller.getLeftX(), m_controller.getRightX()};
+      boolean[] bool_values = {true, true, true};
+      List<Double> speeds = DrivetrainSubsystem.generateSpeeds(bool_values, controllerVals);
+      xDot = speeds.get(0);
+      yDot = speeds.get(1);
+      thetaDot = speeds.get(2);
+       
       fieldRelative = true;
-      if(Math.abs(xDot)<=0.07*0.07*Constants.kMaxTranslationalVelocity){
-        xDot = 0;
-      }
-      else{
-        if(xDot > 0){
-          xDot -= (0.07*0.07);
-        }
-        else{
-          xDot += (0.07*0.07);
-        }
-        xDot *= 1/(1-(0.07*0.07));
-      }
-      if(Math.abs(yDot)<=0.07*0.07*Constants.kMaxTranslationalVelocity){
-        yDot = 0;
-      }
-      else{
-        if(yDot > 0){
-          yDot -= (0.07*0.07);
-        }
-        else{
-          yDot += (0.07*0.07);
-        }
-        yDot *= 1/(1-(0.07*0.07));
-      }
-      if(Math.abs(thetaDot)<=0.07*0.07*Constants.kMaxRotationalVelocity){
-          thetaDot = 0;
-      }
-      else{
-        if(thetaDot > 0){
-          thetaDot -= 0.07*0.07;
-        }
-        else{
-          thetaDot += 0.07*0.07;
-        }
-        thetaDot *= 1/(1-(0.07*0.07));
-      }
     
       chassisSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(xDot*0.3, yDot*0.3, thetaDot*0.3, drivetrain.getHeading());
 
       // System.out.println(chassisSpeeds);
+
       
       drivetrain.drive(chassisSpeeds, true);
     }

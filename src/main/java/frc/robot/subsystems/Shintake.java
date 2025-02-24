@@ -25,10 +25,12 @@ public class Shintake extends SubsystemBase{
         IntakeMotorRight = new SparkMax(Constants.INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
         IntakeLeftConfig = new SparkMaxConfig();
         IntakeRightConfig = new SparkMaxConfig();
-       IntakeMotorLeft.configure(IntakeLeftConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        IntakeLeftConfig.idleMode(IdleMode.kCoast);
+        IntakeRightConfig.idleMode(IdleMode.kCoast);
+        IntakeMotorLeft.configure(IntakeLeftConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
         IntakeMotorRight.configure(IntakeRightConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
-       }
+    }
     public void intake(double speed) {//make dependent on trigger
         IntakeMotorLeft.set(-speed);
         IntakeMotorRight.set(-speed);
@@ -42,6 +44,10 @@ public class Shintake extends SubsystemBase{
     }
     public void shoot() {
         IntakeMotorLeft.set(Constants.INTAKE_OUTTAKE_SPEED);
+        IntakeMotorRight.set(-Constants.INTAKE_OUTTAKE_SPEED);
+      }
+    public void intake() {
+        IntakeMotorLeft.set(-Constants.INTAKE_OUTTAKE_SPEED);
         IntakeMotorRight.set(Constants.INTAKE_OUTTAKE_SPEED);
       }
     public void off(){

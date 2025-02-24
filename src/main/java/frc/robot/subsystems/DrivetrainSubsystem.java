@@ -390,7 +390,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @return the robot's heading as a Rotation2d
    */
   public Rotation2d getHeading() {
-    double raw_yaw = -m_ahrs.getYaw();
+    double raw_yaw = m_ahrs.getYaw();
     // double raw_yaw = m_ahrs.getYaw();
     SmartDashboard.putNumber("Raw Yaw", raw_yaw);
     // float raw_yaw = m_ahrs.getYaw(); // Returns yaw as -180 to +180.

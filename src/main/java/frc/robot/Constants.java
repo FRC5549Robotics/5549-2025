@@ -121,28 +121,33 @@ public final class Constants {
     REPLAY
   }
 
+  //Elevator Constants
+    public static final int ELEVATOR_LEFT_MOTOR = 30;
+    public static final int ELEVATOR_RIGHT_MOTOR = 31;
+    public static final int ELEVATOR_JOYSTICK = 1;
+    public static final double ELEVATOR_DEADBAND = 0.05;
+    public static final double ELEVATOR_SCALING_FACTOR = -0.2;
+    public static final int ELEVATOR_ENCODER = 8;
+    public static final double ELEVATOR_OFFSET = 0.331;  
+
   //Pivot Constants
     public static final int PIVOT_MOTOR = 32;
-    public static final int PIVOT_JOYSTICK = 1;
+    public static final int PIVOT_JOYSTICK = 5;
     public static final double PIVOT_DEADBAND = 0.05;
-    public static final double PIVOT_SCALING_FACTOR = 0.15;
+    public static final double PIVOT_SCALING_FACTOR = 0.3;
     public static final int PIVOT_ENCODER = 4;
     public static final double PIVOT_OFFSET = 0.331;
 
-    //Elevator Constants
-    public static final int ELEVATOR_LEFT_MOTOR = 30;
-    public static final int ELEVATOR_RIGHT_MOTOR = 31;
-    public static final int ELEVATOR_JOYSTICK = 6;
-    public static final double ELEVATOR_DEADBAND = 0.05;
-    public static final double ELEVATOR_SCALING_FACTOR = 0.15;
-    public static final int ELEVATOR_ENCODER = 8;
-    public static final double ELEVATOR_OFFSET = 0.331;
-
-
-    //Shintake Constants
-    public static final int INTAKE_MOTOR_LEFT = 23;
-    public static final int INTAKE_MOTOR_RIGHT = 24;
+  //Shintake Constants
+    public static final int INTAKE_MOTOR_LEFT = 33;
+    public static final int INTAKE_MOTOR_RIGHT = 34;
     public static final int SHOOTER_INTAKE_BUTTON = 6;
     public static final double INTAKE_OUTTAKE_SPEED = 0.5;
     public static final int SHINTAKE_BUTTON = 0;
+
+  //Climb Constants
+    public static final int CLIMBER_MOTOR = 40;
+    public static final int CLIMBER_JOYSTICK = 1;
+    public static final double CLIMBER_DEADBAND = 0.05;
+    public static final double CLIMBER_SCALING_FACTOR = 0.15;
 }

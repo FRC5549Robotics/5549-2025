@@ -46,16 +46,19 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   //region Subsystems
   private final AHRS m_ahrs = new AHRS(NavXComType.kMXP_SPI);
-  // public final DrivetrainSubsystem m_drive = new DrivetrainSubsystem(m_ahrs);
+  public final DrivetrainSubsystem m_drive = new DrivetrainSubsystem(m_ahrs);
   private final Pivot m_pivot = new Pivot(m_controller2);
   private final Elevator m_elevator = new Elevator(m_controller2);
   private final Shintake m_shintake = new Shintake();
+  // private final Climber m_climber = new Climber();
   //endregion
   //region Trajectories
   Optional<Trajectory<SwerveSample>> testT = Choreo.loadTrajectory("Test");
   //endregion
   JoystickButton resetNavXButton = new JoystickButton(m_controller.getHID(), Constants.RESET_NAVX_BUTTON);
-  JoystickButton x_Button = new JoystickButton(m_controller.getHID(), Constants.SHINTAKE_BUTTON);
+  JoystickButton xButton = new JoystickButton(m_controller2.getHID(), 3);
+  JoystickButton yButton = new JoystickButton(m_controller2.getHID(), 4);
+
 
   public RobotContainer() {
     // Configure the trigger bindings
@@ -73,21 +76,19 @@ public class RobotContainer {
    */
   private void configureBindings() {
     //region Drivetrain
-      // m_controller.axisGreaterThan(0, 0.07).or(m_controller.axisGreaterThan(1, 0.07)).or(m_controller.axisGreaterThan(4, 0.07))
-      // .or(m_controller.axisLessThan(0, -0.07)).or(m_controller.axisLessThan(1, -0.07)).or(m_controller.axisLessThan(4, -0.07))
-      // .onTrue(new DriveCommand(m_drive, m_controller));
-      // resetNavXButton.onTrue(new InstantCommand(m_drive::zeroGyroscope));
+      m_controller.axisGreaterThan(0, 0.07).or(m_controller.axisGreaterThan(1, 0.07)).or(m_controller.axisGreaterThan(4, 0.07))
+      .or(m_controller.axisLessThan(0, -0.07)).or(m_controller.axisLessThan(1, -0.07)).or(m_controller.axisLessThan(4, -0.07))
+      .onTrue(new DriveCommand(m_drive, m_controller));
+      resetNavXButton.onTrue(new InstantCommand(m_drive::zeroGyroscope));
     //endregion
 
-    //region Pivot
-    //  ampPivotButton.whileTrue(new PivotIntake(m_pivot, PivotTarget.Amp));
-    // m_controller2.axisGreaterThan(Constants.PIVOT_JOYSTICK, Constants.PIVOT_DEADBAND).or(m_controller2.axisLessThan(Constants.PIVOT_JOYSTICK, -Constants.PIVOT_DEADBAND)).onTrue(new PivotAnalog(m_pivot, m_controller2)).onFalse(new InstantCommand(m_pivot::off));
-    //endregion
-    //region Elevator
-    // m_controller2.axisGreaterThan(Constants.ELEVATOR_JOYSTICK, Constants.ELEVATOR_DEADBAND).or(m_controller2.axisLessThan(Constants.ELEVATOR_JOYSTICK, -Constants.ELEVATOR_DEADBAND)).onTrue(new ElevateAnalog(m_elevator, m_controller2)).onFalse(new InstantCommand(m_elevator::off));
-    //endregion
-    m_controller2.axisGreaterThan(1, Constants.PIVOT_DEADBAND).or(m_controller2.axisLessThan(1, -Constants.PIVOT_DEADBAND)).onTrue(new ElevateAnalog(m_elevator, m_controller2)).onFalse(new InstantCommand(m_elevator::off));
-    x_Button.whileTrue(new InstantCommand(m_shintake::alt_intake));
+    //region Basic Testing Methods
+    m_controller2.axisGreaterThan(Constants.PIVOT_JOYSTICK, Constants.PIVOT_DEADBAND).or(m_controller2.axisLessThan(Constants.PIVOT_JOYSTICK, -Constants.PIVOT_DEADBAND)).onTrue(new PivotAnalog(m_pivot, m_controller2)).onFalse(new InstantCommand(m_pivot::off));
+    m_controller2.axisGreaterThan(Constants.ELEVATOR_JOYSTICK, Constants.ELEVATOR_DEADBAND).or(m_controller2.axisLessThan(Constants.ELEVATOR_JOYSTICK, -Constants.ELEVATOR_DEADBAND)).onTrue(new ElevateAnalog(m_elevator, m_controller2)).onFalse(new InstantCommand(m_elevator::off));
+    // m_controller2.axisGreaterThan(Constants.CLIMBER_JOYSTICK, Constants.CLIMBER_DEADBAND).or(m_controller2.axisLessThan(Constants.CLIMBER_JOYSTICK, -Constants.CLIMBER_DEADBAND)).onTrue(new Climb(m_climber, m_controller2)).onFalse(new InstantCommand(m_climber::off));
+    yButton.onTrue(new InstantCommand(m_shintake::shoot)).onFalse(new InstantCommand(m_shintake::off));
+    xButton.onTrue(new InstantCommand(m_shintake::intake)).onFalse(new InstantCommand(m_shintake::off));
+    //endregion  
   }
 
   /**

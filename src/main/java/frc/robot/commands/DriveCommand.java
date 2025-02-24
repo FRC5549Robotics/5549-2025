@@ -91,7 +91,7 @@ public class DriveCommand extends Command {
         thetaDot *= 1/(1-(0.07*0.07));
       }
     
-      chassisSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(xDot, yDot, thetaDot, drivetrain.getHeading());
+      chassisSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(xDot*0.3, yDot*0.3, thetaDot*0.3, drivetrain.getHeading());
 
       // System.out.println(chassisSpeeds);
       

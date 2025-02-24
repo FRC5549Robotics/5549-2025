@@ -25,41 +25,44 @@ public class Elevator extends SubsystemBase {
   
 
   TalonFX ElevatorRightMotor;
+  TalonFX ElevatorLeftMotor;
   PIDController ElevatorController;
   DutyCycleEncoder ElevatorThroughbore;
   CommandXboxController XboxController;
   TalonFXConfiguration ElevatorRightConfigs;
   TalonFXConfigurator ElevatorRightConfigurator;
+  TalonFXConfiguration ElevatorLeftConfigs;
+  TalonFXConfigurator ElevatorLeftConfigurator;
   public Elevator(CommandXboxController xboxController) {
     XboxController = xboxController;
-    // ElevatorLeftMotor = new TalonFX(Constants.ELEVATOR_LEFT_MOTOR);
+    ElevatorLeftMotor = new TalonFX(Constants.ELEVATOR_LEFT_MOTOR);
     ElevatorRightMotor = new TalonFX(Constants.ELEVATOR_RIGHT_MOTOR);
     //region Configs
-    // ElevatorLeftConfigs = new TalonFXConfiguration();
+    ElevatorLeftConfigs = new TalonFXConfiguration();
     ElevatorRightConfigs = new TalonFXConfiguration();
-    // ElevatorLeftConfigurator = ElevatorLeftMotor.getConfigurator();
+    ElevatorLeftConfigurator = ElevatorLeftMotor.getConfigurator();
     ElevatorRightConfigurator = ElevatorRightMotor.getConfigurator();
-    // ElevatorLeftConfigs.CurrentLimits.StatorCurrentLimit = 60;
-    // ElevatorLeftConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-    // ElevatorLeftConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    ElevatorLeftConfigs.CurrentLimits.StatorCurrentLimit = 60;
+    ElevatorLeftConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+    ElevatorLeftConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     ElevatorRightConfigs.CurrentLimits.StatorCurrentLimit = 60;
     ElevatorRightConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
     ElevatorRightConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    // ElevatorLeftConfigurator.apply(ElevatorLeftConfigs);
+    ElevatorLeftConfigurator.apply(ElevatorLeftConfigs);
     ElevatorRightConfigurator.apply(ElevatorRightConfigs);
     //endregion
-    ElevatorController = new PIDController(0.006, 0.0, 0.00);
-    // ElevatorThroughbore = new DutyCycleEncoder(0, 360, Constants.PIVOT_OFFSET);
+    ElevatorController = new PIDController(0.6, 0.0, 0.00);
+    ElevatorThroughbore = new DutyCycleEncoder(0, 360, Constants.PIVOT_OFFSET);
 
   }
 
   public void elevate(double speed){
-    // ElevatorLeftMotor.set(speed);
-    ElevatorRightMotor.set(speed);
+    ElevatorLeftMotor.set(speed);
+    ElevatorRightMotor.set(-speed);
   }
 
   public void off(){
-    // ElevatorLeftMotor.set(0);
+    ElevatorLeftMotor.set(0);
     ElevatorRightMotor.set(0);
   }
 

@@ -407,50 +407,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return Rotation2d.fromDegrees(calc_yaw);
   }
 
-  public static List<Double> generateSpeeds(boolean[] bool_values, double[] controllerVals) {
-
-    double xDot = 0;
-    double yDot = 0;
-    double thetaDot =0;
-
-    List<Double> mutableVals = new ArrayList<>();
-    mutableVals.add(xDot);
-    mutableVals.add(yDot);
-    mutableVals.add(thetaDot);
-
-
-    for (int i = 0; i < 3; i ++) {
-      if (!bool_values[i]) {
-        mutableVals.set(i, null);
-        continue;
-      }
-      
-      double Dot;
-      if(controllerVals[i] < 0){
-        Dot = -(controllerVals[i]*controllerVals[i]*Constants.kMaxTranslationalVelocity);
-      }
-      else{
-        Dot = (controllerVals[i]*controllerVals[i]) * Constants.kMaxTranslationalVelocity;
-      }
-
-      if(Math.abs(Dot)<=0.07*0.07*Constants.kMaxTranslationalVelocity){
-        Dot = 0;
-      }
-      else{
-        if(Dot > 0){
-          Dot -= (0.07*0.07);
-        }
-        else{
-          Dot += (0.07*0.07);
-        }
-        Dot *= 1/(1-(0.07*0.07));
-      }
-      mutableVals.set(i, Dot);
-
-    }
-
-    return mutableVals;
-  }
   
 
   private SwerveModulePosition[] getModulePositions(){
@@ -501,36 +457,87 @@ public class DrivetrainSubsystem extends SubsystemBase {
   //   }
   // }
 
-  // public ArrayList<Double> processControllerInputs(ArrayList<Double> controllerSpeeds){
-  //   ArrayList<Double> adjustedSpeeds = new ArrayList<>();
-  //   Iterator<Double> speedsIterator = controllerSpeeds.iterator();
-  //   while(true){
-  //     if(speedsIterator.hasNext()){
-  //       Double speed = speedsIterator.next();
-  //       if(speed < 0){
-  //         speed = -(speed * speed * Constants.kMaxTranslationalVelocity);
-  //       }
-  //       else{
-  //         speed = speed * speed * Constants.kMaxTranslationalVelocity;
-  //       }
-  //       if(Math.abs(speed)<=0.07*0.07*Constants.kMaxTranslationalVelocity){
-  //         speed = 0.0;
-  //       }
-  //       else{
-  //         if(speed > 0){
-  //           speed -= (0.07*0.07);
-  //         }
-  //         else{
-  //           speed += (0.07*0.07);
-  //         }
-  //         speed *= 1/(1-(0.07*0.07));
-  //       }
-  //       adjustedSpeeds.add(speed);
-  //     }
-  //     else{
-  //       break;
-  //     }
-  //   }
-  //   return adjustedSpeeds;
-  // }
+  //Not so gourmet code
+  public static List<Double> generateSpeeds(boolean[] bool_values, double[] controllerVals) {
+
+    double xDot = 0;
+    double yDot = 0;
+    double thetaDot =0;
+
+    List<Double> mutableVals = new ArrayList<>();
+    mutableVals.add(xDot);
+    mutableVals.add(yDot);
+    mutableVals.add(thetaDot);
+
+
+    for (int i = 0; i < 3; i ++) {
+      if (!bool_values[i]) {
+        mutableVals.set(i, null);
+        continue;
+      }
+      
+      double Dot;
+      if(controllerVals[i] < 0){
+        Dot = -(controllerVals[i]*controllerVals[i]*Constants.kMaxTranslationalVelocity);
+      }
+      else{
+        Dot = (controllerVals[i]*controllerVals[i]) * Constants.kMaxTranslationalVelocity;
+      }
+
+      if(Math.abs(Dot)<=0.07*0.07*Constants.kMaxTranslationalVelocity){
+        Dot = 0;
+      }
+      else{
+        if(Dot > 0){
+          Dot -= (0.07*0.07);
+        }
+        else{
+          Dot += (0.07*0.07);
+        }
+        Dot *= 1/(1-(0.07*0.07));
+      }
+      mutableVals.set(i, Dot);
+
+    }
+
+    return mutableVals;
+  }
+
+  //Gourmet code
+  public double[] processControllerInputs(double[] ControllerSpeeds){
+    ArrayList<Double> controllerSpeeds= new ArrayList<>();
+    ArrayList<Double> adjustedSpeeds = new ArrayList<>();
+    Iterator<Double> speedsIterator = controllerSpeeds.iterator();
+    for (double d : ControllerSpeeds) {
+      controllerSpeeds.add(d);
+    }
+    while(true){
+      if(speedsIterator.hasNext()){
+        Double speed = speedsIterator.next();
+        if(speed < 0){
+          speed = -(speed * speed * Constants.kMaxTranslationalVelocity);
+        }
+        else{
+          speed = speed * speed * Constants.kMaxTranslationalVelocity;
+        }
+        if(Math.abs(speed)<=0.07*0.07*Constants.kMaxTranslationalVelocity){
+          speed = 0.0;
+        }
+        else{
+          if(speed > 0){
+            speed -= (0.07*0.07);
+          }
+          else{
+            speed += (0.07*0.07);
+          }
+          speed *= 1/(1-(0.07*0.07));
+        }
+        adjustedSpeeds.add(speed);
+      }
+      else{
+        break;
+      }
+    }
+    return adjustedSpeeds.stream().mapToDouble(Double::doubleValue).toArray();
+  }
 }

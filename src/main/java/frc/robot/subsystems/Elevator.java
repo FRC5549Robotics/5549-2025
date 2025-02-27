@@ -17,12 +17,6 @@ import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
-    public enum PivotTarget{
-    Retracted,
-    Intake,
-    Amp
-  }
-  
 
   TalonFX ElevatorRightMotor;
   TalonFX ElevatorLeftMotor;
@@ -64,6 +58,18 @@ public class Elevator extends SubsystemBase {
   public void off(){
     ElevatorLeftMotor.set(0);
     ElevatorRightMotor.set(0);
+  }
+
+  public void ElevateToSetpoint(double leftElevatorSetpoint, double rightElevatorSetpoint) {
+    ElevatorLeftMotor.set(ElevatorController.calculate(getLeftElevatorPosition(), leftElevatorSetpoint)); 
+    ElevatorRightMotor.set(ElevatorController.calculate(getRightElevatorPosition(), rightElevatorSetpoint));
+  }
+
+  public double getLeftElevatorPosition() {
+    return ElevatorLeftMotor.getPosition().getValueAsDouble(); 
+  }
+  public double getRightElevatorPosition() {
+    return ElevatorRightMotor.getPosition().getValueAsDouble(); 
   }
 
   @Override

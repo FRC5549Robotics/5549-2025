@@ -17,49 +17,49 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class DriveAuton extends Command {
-    private ChassisSpeeds chassisSpeeds;
+  private ChassisSpeeds chassisSpeeds;
 
-    // The subsystem the command runs on
-    public final DrivetrainSubsystem drivetrain;
-    Timer timer;
-    Optional<Trajectory<SwerveSample>> traj;
-    double startTime;
+  // The subsystem the command runs on
+  public final DrivetrainSubsystem drivetrain;
+  Timer timer;
+  Optional<Trajectory<SwerveSample>> traj;
+  double startTime;
 
-    public DriveAuton(DrivetrainSubsystem subsystem, Timer Timer, Optional<Trajectory<SwerveSample>> Traj){
-        drivetrain = subsystem;
-        timer = Timer;
-        traj = Traj;
-        addRequirements(drivetrain);
-    }
- 
-    @Override
-    public void initialize() {
-      startTime = timer.get();
-      Optional<Pose2d> initialPose = traj.get().getInitialPose(DriverStation.getAlliance().get() == Alliance.Red);
+  public DriveAuton(DrivetrainSubsystem subsystem, Timer Timer, Optional<Trajectory<SwerveSample>> Traj){
+      drivetrain = subsystem;
+      timer = Timer;
+      traj = Traj;
+      addRequirements(drivetrain);
+  }
 
-      if (initialPose.isPresent()) {
-        drivetrain.resetOdometry(initialPose.get());
-      }
-    }
+  @Override
+  public void initialize() {
+    startTime = timer.get();
+    Optional<Pose2d> initialPose = traj.get().getInitialPose(DriverStation.getAlliance().get() == Alliance.Red);
 
-            
-    @Override
-    public void execute() {
-      drivetrain.followTrajectory(traj.get().sampleAt(timer.get(), DriverStation.getAlliance().get() == Alliance.Red));
+    if (initialPose.isPresent()) {
+      drivetrain.resetOdometry(initialPose.get());
     }
+  }
 
-    @Override
-    public boolean isFinished() {
-      double x = drivetrain.getPose().getMeasureX().abs(Meter) - traj.get().getFinalPose(DriverStation.getAlliance().get() == Alliance.Red).get().getMeasureX().abs(Meter);
-      double y = drivetrain.getPose().getMeasureY().abs(Meter) - traj.get().getFinalPose(DriverStation.getAlliance().get() == Alliance.Red).get().getMeasureY().abs(Meter);
-      double theta = Math.cos(drivetrain.getPose().getRotation().getRadians() - traj.get().getFinalPose(DriverStation.getAlliance().get() == Alliance.Red).get().getRotation().getRadians());
-      return Math.abs(x) < 0.02 && 
-             Math.abs(y) < 0.02 && 
-             Math.abs(theta - 1) < 0.0038053;
-    }
-    
-    @Override
-    public void end(boolean interrupted) {
-      drivetrain.brake();
-    }
+          
+  @Override
+  public void execute() {
+    drivetrain.followTrajectory(traj.get().sampleAt(timer.get(), DriverStation.getAlliance().get() == Alliance.Red));
+  }
+
+  @Override
+  public boolean isFinished() {
+    double x = drivetrain.getPose().getMeasureX().abs(Meter) - traj.get().getFinalPose(DriverStation.getAlliance().get() == Alliance.Red).get().getMeasureX().abs(Meter);
+    double y = drivetrain.getPose().getMeasureY().abs(Meter) - traj.get().getFinalPose(DriverStation.getAlliance().get() == Alliance.Red).get().getMeasureY().abs(Meter);
+    double theta = Math.cos(drivetrain.getPose().getRotation().getRadians() - traj.get().getFinalPose(DriverStation.getAlliance().get() == Alliance.Red).get().getRotation().getRadians());
+    return Math.abs(x) < 0.02 && 
+            Math.abs(y) < 0.02 && 
+            Math.abs(theta - 1) < 0.0038053;
+  }
+  
+  @Override
+  public void end(boolean interrupted) {
+    drivetrain.brake();
+  }
 }

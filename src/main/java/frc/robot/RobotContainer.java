@@ -31,7 +31,10 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shintake;
+// import frc.robot.subsystems.Elevator.PivotTarget;
 import frc.robot.commands.PivotAnalog;
+import frc.robot.commands.PivotSetpoint;
+import frc.robot.subsystems.Pivot.PivotTarget;
 
 
 /**
@@ -52,13 +55,25 @@ public class RobotContainer {
   private final Shintake m_shintake = new Shintake();
   // private final Climber m_climber = new Climber();
   //endregion
+
+
   //region Trajectories
-  Optional<Trajectory<SwerveSample>> testT = Choreo.loadTrajectory("Test");
+  Optional<Trajectory<SwerveSample>> testT1 = Choreo.loadTrajectory("Test1");
+  Optional<Trajectory<SwerveSample>> testT2 = Choreo.loadTrajectory("Test2");
   //endregion
   JoystickButton resetNavXButton = new JoystickButton(m_controller.getHID(), Constants.RESET_NAVX_BUTTON);
   JoystickButton xButton = new JoystickButton(m_controller2.getHID(), 3);
   JoystickButton yButton = new JoystickButton(m_controller2.getHID(), 4);
 
+  //Pivot Buttons
+  JoystickButton stowedButton = new JoystickButton(m_controller2.getHID(), 0);
+  JoystickButton pivotIntakeButton = new JoystickButton(m_controller2.getHID(), 0);
+  JoystickButton L1Button = new JoystickButton(m_controller2.getHID(), 0);
+  JoystickButton L2Button = new JoystickButton(m_controller2.getHID(), 0);
+  JoystickButton L3Button = new JoystickButton(m_controller2.getHID(), 0);
+  JoystickButton L4Button = new JoystickButton(m_controller2.getHID(), 0);
+  JoystickButton AlgaeLowButton = new JoystickButton(m_controller2.getHID(), 0);
+  JoystickButton AlgaeHighButton = new JoystickButton(m_controller2.getHID(), 0);
 
   public RobotContainer() {
     // Configure the trigger bindings
@@ -81,6 +96,18 @@ public class RobotContainer {
       .onTrue(new DriveCommand(m_drive, m_controller));
       resetNavXButton.onTrue(new InstantCommand(m_drive::zeroGyroscope));
     //endregion
+
+    //Pivot
+    // Pivot
+    pivotIntakeButton.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.Intake));
+    stowedButton.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.Stowed));
+    L1Button.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.L1));
+    L2Button.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.L2));
+    L3Button.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.L3));   
+    L4Button.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.L4)); 
+    AlgaeLowButton.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.AlgaeLow));
+    AlgaeHighButton.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.AlgaeHigh));
+    pivotIntakeButton.or(stowedButton).or(L1Button).or(L2Button).or(L3Button).or(L4Button).or(AlgaeLowButton).or(AlgaeHighButton).onFalse(new InstantCommand(m_pivot::off));
 
     //region Basic Testing Methods
     m_controller2.axisGreaterThan(Constants.PIVOT_JOYSTICK, Constants.PIVOT_DEADBAND).or(m_controller2.axisLessThan(Constants.PIVOT_JOYSTICK, -Constants.PIVOT_DEADBAND)).onTrue(new PivotAnalog(m_pivot, m_controller2)).onFalse(new InstantCommand(m_pivot::off));

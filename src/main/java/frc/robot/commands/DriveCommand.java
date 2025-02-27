@@ -45,11 +45,13 @@ public class DriveCommand extends Command {
        
       fieldRelative = true;
     
-      chassisSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(xDot*0.15, yDot*0.15, thetaDot*0.15, drivetrain.getHeading());
+      chassisSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(xDot, yDot, thetaDot, drivetrain.getHeading());
 
-      // System.out.println(chassisSpeeds);
-
-      
-      drivetrain.drive(chassisSpeeds, true);
+      if(xDot != 0 || yDot != 0 || thetaDot != 0){
+        drivetrain.drive(chassisSpeeds, true);
+      }
+      else{
+        drivetrain.brake();
+      }
     }
 }

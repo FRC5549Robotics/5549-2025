@@ -9,17 +9,21 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Pivot.PivotTarget;
+import frc.robot.subsystems.Elevator;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class PivotSetpoint extends Command {
+public class Setpoints extends Command {
   /** Creates a new PivotSetpoint. */
   Pivot m_pivot;
   Pivot.PivotTarget target;
   double pivotSetpoint, elevatorLeftSetpoint, elevatorRightSetpoint;
   boolean end;
-  public PivotSetpoint(Pivot pivot, Pivot.PivotTarget Target) {
+  Elevator elevator;
+
+  public Setpoints(Pivot pivot, Pivot.PivotTarget Target, Elevator Elevator) {
     m_pivot = pivot;
     target = Target;
+    elevator = Elevator;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -71,7 +75,9 @@ public class PivotSetpoint extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_pivot.PivotSetpoint(pivotSetpoint);
+    m_pivot.PivotToSetpoint(pivotSetpoint);
+    elevator.ElevateToSetpoint(elevatorLeftSetpoint, elevatorRightSetpoint);
+
   }
 
   // Called once the command ends or is interrupted.

@@ -12,6 +12,7 @@ import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
@@ -28,6 +29,7 @@ public class Elevator extends SubsystemBase {
   TalonFXConfigurator ElevatorRightConfigurator;
   TalonFXConfiguration ElevatorLeftConfigs;
   TalonFXConfigurator ElevatorLeftConfigurator;
+  boolean reset = true;
   
   public Elevator(CommandXboxController xboxController) {
     XboxController = xboxController;
@@ -75,12 +77,29 @@ public class Elevator extends SubsystemBase {
     return ElevatorRightMotor.getPosition().getValueAsDouble(); 
   }
 
-  public double detectVoltage() {
-    ElevatorLeftMotor.getMotorVoltage().getValueAsDouble();
+  public double detectElevatorLeftCurrent() {
+    return ElevatorLeftMotor.getSupplyCurrent().getValueAsDouble();
+  }
+
+  public double detectElevatorRightCurrent(){
+    return ElevatorRightMotor.getSupplyCurrent().getValueAsDouble();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (reset){
+      if (detectElevatorLeftCurrent() >= Constants.ELEVATOR_RESET_VOLTAGE && detectElevatorRightCurrent() >= Constants.ELEVATOR_RESET_VOLTAGE){
+        ElevatorLeftMotor.setPosition(0);
+        ElevatorRightMotor.setPosition(0);
+        reset = false;
+      }
+      else{
+        ElevatorLeftMotor.set(0.05);
+        ElevatorRightMotor.set(0.05);
+      }
+    }
+    SmartDashboard.putNumber("LeftElevatorEncoder", getRightElevatorPosition());
+    SmartDashboard.putNumber("RightElevatorEncoder", getLeftElevatorPosition());
   }
 }

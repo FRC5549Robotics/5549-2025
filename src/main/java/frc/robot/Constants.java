@@ -145,6 +145,7 @@ public final class Constants {
     public static final double ELEVATOR_RIGHT_L4_SETPOINT = 0;
     public static final double ELEVATOR_RIGHT_ALGAE_LOW_SETPOINT = 0;
     public static final double ELEVATOR_RIGHT_ALGAE_HIGH_SETPOINT = 0;
+    public static final double ELEVATOR_RESET_VOLTAGE = 20;
   //Pivot Constants
     public static final int PIVOT_MOTOR = 32;
     public static final int PIVOT_JOYSTICK = 5;
@@ -160,6 +161,7 @@ public final class Constants {
     public static final double PIVOT_L4_SETPOINT = 0;
     public static final double PIVOT_ALGAE_LOW_SETPOINT = 0;
     public static final double PIVOT_ALGAE_HIGH_SETPOINT = 0;
+    public static final double PIVOT_RESET_VOLTAGE = 20;
 
   //Shintake Constants
     public static final int INTAKE_MOTOR_LEFT = 33;
@@ -173,4 +175,5 @@ public final class Constants {
     public static final int CLIMBER_JOYSTICK = 1;
     public static final double CLIMBER_DEADBAND = 0.05;
     public static final double CLIMBER_SCALING_FACTOR = 0.15;
+
 }

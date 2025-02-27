@@ -45,7 +45,7 @@ public class DriveCommand extends Command {
        
       fieldRelative = true;
     
-      chassisSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(xDot*0.3, yDot*0.3, thetaDot*0.3, drivetrain.getHeading());
+      chassisSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(xDot*0.15, yDot*0.15, thetaDot*0.15, drivetrain.getHeading());
 
       // System.out.println(chassisSpeeds);
 

@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -27,6 +28,7 @@ public class Elevator extends SubsystemBase {
   TalonFXConfigurator ElevatorRightConfigurator;
   TalonFXConfiguration ElevatorLeftConfigs;
   TalonFXConfigurator ElevatorLeftConfigurator;
+  
   public Elevator(CommandXboxController xboxController) {
     XboxController = xboxController;
     ElevatorLeftMotor = new TalonFX(Constants.ELEVATOR_LEFT_MOTOR);
@@ -47,8 +49,9 @@ public class Elevator extends SubsystemBase {
     //endregion
     ElevatorController = new PIDController(0.6, 0.0, 0.00);
     ElevatorThroughbore = new DutyCycleEncoder(0, 360, Constants.PIVOT_OFFSET);
-
-  }
+      
+    };
+  
 
   public void elevate(double speed){
     ElevatorLeftMotor.set(speed);
@@ -70,6 +73,10 @@ public class Elevator extends SubsystemBase {
   }
   public double getRightElevatorPosition() {
     return ElevatorRightMotor.getPosition().getValueAsDouble(); 
+  }
+
+  public double detectVoltage() {
+    ElevatorLeftMotor.getMotorVoltage().getValueAsDouble();
   }
 
   @Override

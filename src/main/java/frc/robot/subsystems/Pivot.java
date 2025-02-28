@@ -76,16 +76,16 @@ public class Pivot extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (reset){
-      if (detectPivotMotorCurrent() >= Constants.PIVOT_RESET_VOLTAGE){
-        PivotMotor.setPosition(0);
-        reset = false;
-      }
-      else{
-        PivotMotor.set(0.05);
+    // if (reset){
+    //   if (detectPivotMotorCurrent() >= Constants.PIVOT_RESET_VOLTAGE){
+    //     PivotMotor.setPosition(0);
+    //     reset = false;
+    //   }
+    //   else{
+    //     PivotMotor.set(0.05);
         
-      }
-    }
+    //   }
+    // }
     SmartDashboard.putNumber("PivotEncoder", getPivotPosition());
   }
 }

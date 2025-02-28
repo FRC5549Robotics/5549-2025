@@ -181,11 +181,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
       m_ahrs.zeroYaw();
       System.out.println("Zeroed: " + getHeading());
     }
- 
-    SmartDashboard.putNumber("Pitch", m_ahrs.getPitch());
-    SmartDashboard.putNumber("Roll", m_ahrs.getRoll());
-    SmartDashboard.putNumber("Yaw", m_ahrs.getYaw());
-
   }
 
   public void updateOdometry() {
@@ -271,7 +266,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     this.speeds = speeds;
 
     if (speeds.vxMetersPerSecond == 0 && speeds.vyMetersPerSecond == 0 && speeds.omegaRadiansPerSecond == 0) {
-      brake();
+      snap();
       return;
     }
 
@@ -287,7 +282,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void openLoopDrive(ChassisSpeeds speeds) {
     this.speeds = speeds;
     if (speeds.vxMetersPerSecond == 0 && speeds.vyMetersPerSecond == 0 && speeds.omegaRadiansPerSecond == 0) {
-      brake();
+      snap();
       return;
     }
 
@@ -321,7 +316,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
   }
 
-  public void brake() {
+  public void snap() {
     for (SwerveModule module : modules) {
       module.setDesiredState(new SwerveModuleState(0, new Rotation2d(0)));
     }

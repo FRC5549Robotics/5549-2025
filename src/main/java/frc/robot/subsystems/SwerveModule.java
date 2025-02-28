@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import java.io.Console;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -78,10 +79,12 @@ public class SwerveModule extends SubsystemBase {
         Timer.delay(1);
         System.out.println("initialized");
         m_turningCANCoder = new CANcoder(turningCANCoderChannel);
+        CANcoderConfiguration config = new CANcoderConfiguration();
+        config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
         m_turningCANCoder.setPosition(m_turningCANCoder.getAbsolutePosition().getValueAsDouble());
+        m_turningCANCoder.getConfigurator().apply(config);
         // m_turningCANCoder.setPosition(0);        
         m_turningEncoder = m_turningController.getEncoder();
-
         // m_CANCoderOffset = Rotation2d.fromDegrees(turningCANCoderOffsetDegrees);
 
         // m_driveEncoder returns RPM by default. Use setVelocityConversionFactor() to

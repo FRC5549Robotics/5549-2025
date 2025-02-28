@@ -60,6 +60,6 @@ public class DriveAuton extends Command {
   
   @Override
   public void end(boolean interrupted) {
-    drivetrain.brake();
+    drivetrain.snap();
   }
 }

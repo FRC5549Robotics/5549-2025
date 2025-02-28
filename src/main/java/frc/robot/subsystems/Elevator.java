@@ -88,17 +88,17 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (reset){
-      if (detectElevatorLeftCurrent() >= Constants.ELEVATOR_RESET_VOLTAGE && detectElevatorRightCurrent() >= Constants.ELEVATOR_RESET_VOLTAGE){
-        ElevatorLeftMotor.setPosition(0);
-        ElevatorRightMotor.setPosition(0);
-        reset = false;
-      }
-      else{
-        ElevatorLeftMotor.set(0.05);
-        ElevatorRightMotor.set(0.05);
-      }
-    }
+    // if (reset){
+    //   if (detectElevatorLeftCurrent() >= Constants.ELEVATOR_RESET_VOLTAGE && detectElevatorRightCurrent() >= Constants.ELEVATOR_RESET_VOLTAGE){
+    //     ElevatorLeftMotor.setPosition(0);
+    //     ElevatorRightMotor.setPosition(0);
+    //     reset = false;
+    //   }
+    //   else{
+    //     ElevatorLeftMotor.set(-0.05);
+    //     ElevatorRightMotor.set(0.05);
+    //   }
+    // }
     SmartDashboard.putNumber("LeftElevatorEncoder", getRightElevatorPosition());
     SmartDashboard.putNumber("RightElevatorEncoder", getLeftElevatorPosition());
   }

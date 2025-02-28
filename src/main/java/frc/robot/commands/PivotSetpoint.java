@@ -71,7 +71,7 @@ public class PivotSetpoint extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_pivot.PivotSetpoint(pivotSetpoint);
+    m_pivot.PivotToSetpoint(pivotSetpoint);
   }
 
   // Called once the command ends or is interrupted.

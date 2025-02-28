@@ -33,37 +33,37 @@ public class Limelight extends SubsystemBase {
   public void turnToTarget() {
     // var results = camera.getAllUnreadResults();
     // var result = results.get(results.size() - 1);
-    AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+    // AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
     
-    var result = camera.getLatestResult();
-    if (result.hasTargets()) {
-      // At least one AprilTag was seen by the camera
-      for (var target : result.getTargets()) {
-        //Alt approach: Gets robot and april tag 3D poses to calculate angle
-        Transform3d robotToCam = new Transform3d(new Translation3d(0, 0.0, 0), new Rotation3d(0,0,0));
-        Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), robotToCam);
-        double thetaR = robotPose.getRotation().getZ();
-        Pose3d tagPose = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get();
-        double thetaA = tagPose.getRotation().getZ();
-        double thetaT = 0;
-        if (thetaA < 0) {
-          thetaT = Math.PI+thetaA;
-        }
-        if (thetaA == 0) {
-          thetaT = (Math.PI-thetaA);
-        }
-        else {
-          thetaT = thetaA-Math.PI;
-        }
-        m_drivetrain.drive(new ChassisSpeeds(0, 0, controller.calculate(thetaR, thetaT)), false);
+    // var result = camera.getLatestResult();
+    // if (result.hasTargets()) {
+    //   // At least one AprilTag was seen by the camera
+    //   for (var target : result.getTargets()) {
+    //     //Alt approach: Gets robot and april tag 3D poses to calculate angle
+    //     Transform3d robotToCam = new Transform3d(new Translation3d(0, 0.0, 0), new Rotation3d(0,0,0));
+    //     Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), robotToCam);
+    //     double thetaR = robotPose.getRotation().getZ();
+    //     Pose3d tagPose = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get();
+    //     double thetaA = tagPose.getRotation().getZ();
+    //     double thetaT = 0;
+    //     if (thetaA < 0) {
+    //       thetaT = Math.PI+thetaA;
+    //     }
+    //     if (thetaA == 0) {
+    //       thetaT = (Math.PI-thetaA);
+    //     }
+    //     else {
+    //       thetaT = thetaA-Math.PI;
+    //     }
+    //     m_drivetrain.drive(new ChassisSpeeds(0, 0, controller.calculate(thetaR, thetaT)), false);
         
 
-        // double distanceToTarget = PhotonUtils.getDistanceToPose(robotPose, targetPose);
-        // Translation2d trans = PhotonUtils.estimateCameraToTargetTranslation(0, null);
-        var targetYaw = target.getYaw();
-        m_drivetrain.drive(new ChassisSpeeds(0, 0, controller.calculate(targetYaw)), false);
-      }
-    }
+    //     // double distanceToTarget = PhotonUtils.getDistanceToPose(robotPose, targetPose);
+    //     // Translation2d trans = PhotonUtils.estimateCameraToTargetTranslation(0, null);
+    //     var targetYaw = target.getYaw();
+    //     m_drivetrain.drive(new ChassisSpeeds(0, 0, controller.calculate(targetYaw)), false);
+    //   }
+    // }
 
   // public void ttt2() {}
   // }

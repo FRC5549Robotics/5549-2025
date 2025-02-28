@@ -23,6 +23,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 
 public class SwerveModule extends SubsystemBase {
@@ -52,7 +53,8 @@ public class SwerveModule extends SubsystemBase {
     public SwerveModule(
                         int driveMotorChannel,
                         int turningMotorChannel,
-                        int turningCANCoderChannel) {
+                        int turningCANCoderChannel,
+                        double magnetOffset) {
         m_driveController = new SparkMax(driveMotorChannel, MotorType.kBrushless);
         m_turningController = new SparkMax(turningMotorChannel, MotorType.kBrushless);
         m_driveConfig = new SparkMaxConfig();
@@ -73,14 +75,14 @@ public class SwerveModule extends SubsystemBase {
         
         // 401 only sets P of the drive PID
 
-        Timer.delay(0.5);
-
+        new WaitCommand(0.5);
         m_driveEncoder = m_driveController.getEncoder();
-        Timer.delay(1);
+        new WaitCommand(1);
         System.out.println("initialized");
         m_turningCANCoder = new CANcoder(turningCANCoderChannel);
         CANcoderConfiguration config = new CANcoderConfiguration();
         config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
+        config.MagnetSensor.MagnetOffset = magnetOffset;
         m_turningCANCoder.setPosition(m_turningCANCoder.getAbsolutePosition().getValueAsDouble());
         m_turningCANCoder.getConfigurator().apply(config);
         // m_turningCANCoder.setPosition(0);        

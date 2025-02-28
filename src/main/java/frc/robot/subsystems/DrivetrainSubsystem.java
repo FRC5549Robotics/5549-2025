@@ -43,28 +43,32 @@ public class DrivetrainSubsystem extends SubsystemBase {
       new SwerveModule(
           Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR,
           Constants.FRONT_LEFT_MODULE_STEER_MOTOR,
-          Constants.FRONT_LEFT_MODULE_STEER_ENCODER
+          Constants.FRONT_LEFT_MODULE_STEER_ENCODER,
+          Constants.FRONT_LEFT_MAGNET_OFFSET
           );
 
   private final SwerveModule m_frontRight =
       new SwerveModule(
           Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR,
           Constants.FRONT_RIGHT_MODULE_STEER_MOTOR,
-          Constants.FRONT_RIGHT_MODULE_STEER_ENCODER
+          Constants.FRONT_RIGHT_MODULE_STEER_ENCODER,
+          Constants.FRONT_RIGHT_MAGNET_OFFSET
           );
 
   private final SwerveModule m_rearLeft =
       new SwerveModule(
         Constants.BACK_LEFT_MODULE_DRIVE_MOTOR,
         Constants.BACK_LEFT_MODULE_STEER_MOTOR,
-        Constants.BACK_LEFT_MODULE_STEER_ENCODER
+        Constants.BACK_LEFT_MODULE_STEER_ENCODER,
+        Constants.BACK_LEFT_MAGNET_OFFSET
           );
 
   private final SwerveModule m_rearRight =
       new SwerveModule(
         Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR,
         Constants.BACK_RIGHT_MODULE_STEER_MOTOR,
-        Constants.BACK_RIGHT_MODULE_STEER_ENCODER
+        Constants.BACK_RIGHT_MODULE_STEER_ENCODER,
+        Constants.BACK_RIGHT_MAGNET_OFFSET
           );
 
   private SwerveModule[] modules = {m_frontLeft, m_frontRight, m_rearLeft, m_rearRight};
@@ -81,8 +85,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   //target pose and controller
   Pose2d m_targetPose;
-  PIDController m_thetaController = new PIDController(0.5, 0.0, 0.0);
-  PIDController m_translationController = new PIDController(0.5,0,0);
+  PIDController m_thetaController = new PIDController(0.1, 0.0, 0.0);
+  PIDController m_translationController = new PIDController(0.1,0,0);
 
   ChassisSpeeds speeds; 
   Field2d m_field;
@@ -425,20 +429,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void followTrajectory(Optional<SwerveSample> optionalSample) {
     SwerveSample sample = optionalSample.get();
-    System.out.print("x:" + sample.x);
-    System.out.print(" y:" + sample.y);
-    System.out.print(" theta:" + sample.heading);
-    System.out.print(" vx:" + sample.vx);
-    System.out.print(" vy:" + sample.vy);
-    System.out.println(" omega:" + sample.omega);
     // Get the current pose of the robot
     Pose2d pose = getPose();
 
+    System.out.println(sample.vx + "" + sample.vy + "" + sample.omega);
     // Generate the next speeds for the robot
     ChassisSpeeds speeds = new ChassisSpeeds(
-        -sample.vx - m_translationController.calculate(pose.getX(), sample.x),
-        -sample.vy - m_translationController.calculate(pose.getY(), sample.y),
-        sample.omega //+ m_thetaController.calculate(pose.getRotation().getRadians(), sample.heading)
+        sample.vx - m_translationController.calculate(pose.getX(), sample.x),
+        sample.vy - m_translationController.calculate(pose.getY(), sample.y),
+        sample.omega + m_thetaController.calculate(pose.getRotation().getRadians(), sample.heading)
     );
 
     // Apply the generated speeds

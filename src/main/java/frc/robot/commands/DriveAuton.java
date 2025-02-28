@@ -34,9 +34,9 @@ public class DriveAuton extends Command {
 
   @Override
   public void initialize() {
+    timer.reset();
     startTime = timer.get();
     Optional<Pose2d> initialPose = traj.get().getInitialPose(DriverStation.getAlliance().get() == Alliance.Red);
-
     if (initialPose.isPresent()) {
       drivetrain.resetOdometry(initialPose.get());
     }
@@ -44,8 +44,8 @@ public class DriveAuton extends Command {
 
           
   @Override
-  public void execute() {
-    drivetrain.followTrajectory(traj.get().sampleAt(timer.get(), DriverStation.getAlliance().get() == Alliance.Red));
+  public void execute(){
+      drivetrain.followTrajectory(traj.get().sampleAt(timer.get() - startTime, DriverStation.getAlliance().get() == Alliance.Red));
   }
 
   @Override
@@ -57,6 +57,7 @@ public class DriveAuton extends Command {
             Math.abs(y) < 0.02 && 
             Math.abs(theta - 1) < 0.0038053;
   }
+
   
   @Override
   public void end(boolean interrupted) {

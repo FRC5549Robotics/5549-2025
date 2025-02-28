@@ -16,6 +16,7 @@ import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -54,11 +55,19 @@ public class RobotContainer {
   private final Pivot m_pivot = new Pivot(m_controller2);
   private final Elevator m_elevator = new Elevator(m_controller2);
   private final Shintake m_shintake = new Shintake();
+
+
   // private final Climber m_climber = new Climber();
   //endregion
 
 
   //region Trajectories
+  AutoFactory autoFactory = new AutoFactory(
+    m_drive::getPose, // A function that returns the current robot pose
+    m_drive::resetOdometry, // A function that resets the current robot pose to the provided Pose2d
+    m_drive::followTrajectory, // The drive subsystem trajectory follower 
+    true, // If alliance flipping should be enabled 
+    m_drive);
   Optional<Trajectory<SwerveSample>> testT1 = Choreo.loadTrajectory("Test1");
   Optional<Trajectory<SwerveSample>> testT2 = Choreo.loadTrajectory("Test2");
   //endregion
@@ -127,8 +136,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     Timer timer = new Timer();
-    timer.start();
-    // return new DriveAuton(m_drive, timer, testT);
-    return null;
+    Command myTrajectory = autoFactory.trajectoryCmd("Test1");
+    Command resetOdometry = autoFactory.resetOdometry("Test1");
+    System.out.println(myTrajectory.getClass().getClassLoader());
+    return new SequentialCommandGroup(resetOdometry, myTrajectory);
+    }
   }
-}

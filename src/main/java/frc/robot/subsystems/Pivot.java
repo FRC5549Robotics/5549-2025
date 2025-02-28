@@ -12,6 +12,7 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -36,7 +37,7 @@ public class Pivot extends SubsystemBase {
   TalonFXConfigurator PivotConfigurator;
   boolean intakePosition = false;
   boolean lock = true;
-
+  boolean reset = true;
   /** Creates a new Pivot. */
   public Pivot(CommandXboxController xboxController) {
     XboxController = xboxController;
@@ -68,9 +69,23 @@ public class Pivot extends SubsystemBase {
     PivotMotor.set(PivotController.calculate(getPivotPosition(), pivotSetpoint)); 
   }
 
+  public double detectPivotMotorCurrent() {
+    return PivotMotor.getSupplyCurrent().getValueAsDouble();
+  }
   
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (reset){
+      if (detectPivotMotorCurrent() >= Constants.PIVOT_RESET_VOLTAGE){
+        PivotMotor.setPosition(0);
+        reset = false;
+      }
+      else{
+        PivotMotor.set(0.05);
+        
+      }
+    }
+    SmartDashboard.putNumber("PivotEncoder", getPivotPosition());
   }
 }

@@ -33,8 +33,9 @@ import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shintake;
 // import frc.robot.subsystems.Elevator.PivotTarget;
 import frc.robot.commands.PivotAnalog;
-import frc.robot.commands.PivotSetpoint;
+import frc.robot.commands.Setpoints;
 import frc.robot.subsystems.Pivot.PivotTarget;
+import frc.robot.subsystems.Elevator;
 
 
 /**
@@ -99,14 +100,14 @@ public class RobotContainer {
 
     //Pivot
     // Pivot
-    pivotIntakeButton.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.Intake));
-    stowedButton.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.Stowed));
-    L1Button.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.L1));
-    L2Button.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.L2));
-    L3Button.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.L3));   
-    L4Button.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.L4)); 
-    AlgaeLowButton.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.AlgaeLow));
-    AlgaeHighButton.whileTrue(new PivotSetpoint(m_pivot, PivotTarget.AlgaeHigh));
+    pivotIntakeButton.whileTrue(new Setpoints(m_pivot, PivotTarget.Intake, m_elevator));
+    stowedButton.whileTrue(new Setpoints(m_pivot, PivotTarget.Stowed, m_elevator));
+    L1Button.whileTrue(new Setpoints(m_pivot, PivotTarget.L1, m_elevator));
+    L2Button.whileTrue(new Setpoints(m_pivot, PivotTarget.L2, m_elevator));
+    L3Button.whileTrue(new Setpoints(m_pivot, PivotTarget.L3, m_elevator));   
+    L4Button.whileTrue(new Setpoints(m_pivot, PivotTarget.L4, m_elevator)); 
+    AlgaeLowButton.whileTrue(new Setpoints(m_pivot, PivotTarget.AlgaeLow, m_elevator));
+    AlgaeHighButton.whileTrue(new Setpoints(m_pivot, PivotTarget.AlgaeHigh, m_elevator));
     pivotIntakeButton.or(stowedButton).or(L1Button).or(L2Button).or(L3Button).or(L4Button).or(AlgaeLowButton).or(AlgaeHighButton).onFalse(new InstantCommand(m_pivot::off));
 
     //region Basic Testing Methods

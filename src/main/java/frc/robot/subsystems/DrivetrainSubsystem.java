@@ -427,8 +427,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_rearRight.getState());
   }
 
-  public void followTrajectory(Optional<SwerveSample> optionalSample) {
-    SwerveSample sample = optionalSample.get();
+  public void followTrajectory(SwerveSample sample) {
     // Get the current pose of the robot
     Pose2d pose = getPose();
 

@@ -72,8 +72,6 @@ public class RobotContainer {
   Optional<Trajectory<SwerveSample>> testT2 = Choreo.loadTrajectory("Test2");
   //endregion
   JoystickButton resetNavXButton = new JoystickButton(m_controller.getHID(), Constants.RESET_NAVX_BUTTON);
-  JoystickButton xButton = new JoystickButton(m_controller2.getHID(), 3);
-  JoystickButton yButton = new JoystickButton(m_controller2.getHID(), 4);
 
   //Pivot Buttons
   JoystickButton stowedButton = new JoystickButton(m_controller2.getHID(), 0);
@@ -84,6 +82,7 @@ public class RobotContainer {
   JoystickButton L4Button = new JoystickButton(m_controller2.getHID(), 0);
   JoystickButton AlgaeLowButton = new JoystickButton(m_controller2.getHID(), 0);
   JoystickButton AlgaeHighButton = new JoystickButton(m_controller2.getHID(), 0);
+  JoystickButton SetToZero = new JoystickButton(m_controller.getHID(), 7);
 
   public RobotContainer() {
     // Configure the trigger bindings
@@ -122,9 +121,12 @@ public class RobotContainer {
     //region Basic Testing Methods
     m_controller2.axisGreaterThan(Constants.PIVOT_JOYSTICK, Constants.PIVOT_DEADBAND).or(m_controller2.axisLessThan(Constants.PIVOT_JOYSTICK, -Constants.PIVOT_DEADBAND)).onTrue(new PivotAnalog(m_pivot, m_controller2)).onFalse(new InstantCommand(m_pivot::off));
     m_controller2.axisGreaterThan(Constants.ELEVATOR_JOYSTICK, Constants.ELEVATOR_DEADBAND).or(m_controller2.axisLessThan(Constants.ELEVATOR_JOYSTICK, -Constants.ELEVATOR_DEADBAND)).onTrue(new ElevateAnalog(m_elevator, m_controller2)).onFalse(new InstantCommand(m_elevator::off));
+
+    //Set Pivot and Elevator Position to Zero
+    SetToZero.whileTrue(new ParallelCommandGroup(new InstantCommand(m_pivot::ResetEncoder), new InstantCommand(m_elevator::ResetEncoder)));
     // m_controller2.axisGreaterThan(Constants.CLIMBER_JOYSTICK, Constants.CLIMBER_DEADBAND).or(m_controller2.axisLessThan(Constants.CLIMBER_JOYSTICK, -Constants.CLIMBER_DEADBAND)).onTrue(new Climb(m_climber, m_controller2)).onFalse(new InstantCommand(m_climber::off));
-    yButton.onTrue(new InstantCommand(m_shintake::shoot)).onFalse(new InstantCommand(m_shintake::off));
-    xButton.onTrue(new InstantCommand(m_shintake::intake)).onFalse(new InstantCommand(m_shintake::off));
+    m_controller.axisGreaterThan(Constants.INTAKE_TRIGGER, 0.1).onTrue(new InstantCommand(m_shintake::intake));
+    m_controller.axisGreaterThan(Constants.OUTTAKE_TRIGGER, 0.1).onTrue(new InstantCommand(m_shintake::shoot));
     //endregion  
   }
 

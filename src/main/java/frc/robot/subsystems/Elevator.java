@@ -85,6 +85,11 @@ public class Elevator extends SubsystemBase {
     return ElevatorRightMotor.getSupplyCurrent().getValueAsDouble();
   }
 
+  public void ResetEncoder() {
+    ElevatorLeftMotor.setPosition(0);
+    ElevatorRightMotor.setPosition(0);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

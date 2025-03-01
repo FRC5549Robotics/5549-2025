@@ -72,6 +72,10 @@ public class Pivot extends SubsystemBase {
   public double detectPivotMotorCurrent() {
     return PivotMotor.getSupplyCurrent().getValueAsDouble();
   }
+
+  public void ResetEncoder() {
+    PivotMotor.setPosition(0);
+  }
   
   @Override
   public void periodic() {

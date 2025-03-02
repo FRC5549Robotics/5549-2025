@@ -78,7 +78,7 @@ public class SwerveModule extends SubsystemBase {
         new WaitCommand(0.5);
         m_driveEncoder = m_driveController.getEncoder();
         new WaitCommand(1);
-        System.out.println("initialized");
+
         m_turningCANCoder = new CANcoder(turningCANCoderChannel);
         CANcoderConfiguration config = new CANcoderConfiguration();
         config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;

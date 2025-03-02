@@ -50,7 +50,7 @@ public class Pivot extends SubsystemBase {
     PivotConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     PivotConfigurator.apply(PivotConfigs);
     //endregion
-    PivotController = new PIDController(0.006, 0.0, 0.00);
+    PivotController = new PIDController(0.015, 0.0, 0.005);
   }
 
   public void pivot(double speed){
@@ -66,7 +66,7 @@ public class Pivot extends SubsystemBase {
   }
 
   public void PivotToSetpoint(double pivotSetpoint) {
-    PivotMotor.set(PivotController.calculate(getPivotPosition(), pivotSetpoint)); 
+    // PivotMotor.set(PivotController.calculate(getPivotPosition(), pivotSetpoint)); 
   }
 
   public double detectPivotMotorCurrent() {

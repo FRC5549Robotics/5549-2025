@@ -45,7 +45,7 @@ public class DriveAuton extends Command {
           
   @Override
   public void execute(){
-      drivetrain.followTrajectory(traj.get().sampleAt(timer.get() - startTime, DriverStation.getAlliance().get() == Alliance.Red));
+      drivetrain.followTrajectory(traj.get().sampleAt(timer.get() - startTime, DriverStation.getAlliance().get() == Alliance.Red).get());
   }
 
   @Override

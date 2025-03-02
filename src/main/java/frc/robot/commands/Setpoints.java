@@ -55,11 +55,11 @@ public class Setpoints extends Command {
       elevatorLeftSetpoint = Constants.ELEVATOR_LEFT_L3_SETPOINT;
       elevatorRightSetpoint = Constants.ELEVATOR_RIGHT_L3_SETPOINT;
     }
-    else if(target == PivotTarget.L4) {
-      pivotSetpoint = Constants.PIVOT_L4_SETPOINT;
-      elevatorLeftSetpoint = Constants.ELEVATOR_LEFT_L4_SETPOINT;
-      elevatorRightSetpoint = Constants.ELEVATOR_RIGHT_L4_SETPOINT;
-    }
+    // else if(target == PivotTarget.L4) {
+    //   pivotSetpoint = Constants.PIVOT_L4_SETPOINT;
+    //   elevatorLeftSetpoint = Constants.ELEVATOR_LEFT_L4_SETPOINT;
+    //   elevatorRightSetpoint = Constants.ELEVATOR_RIGHT_L4_SETPOINT;
+    // }
     else if(target == PivotTarget.AlgaeLow){
       pivotSetpoint = Constants.PIVOT_ALGAE_LOW_SETPOINT;
       elevatorLeftSetpoint = Constants.ELEVATOR_LEFT_ALGAE_LOW_SETPOINT;

@@ -16,32 +16,36 @@ import frc.robot.Constants;
 public class Shintake extends SubsystemBase{
     //create the two neo motors
 
-   SparkFlex IntakeMotorLeft;
+   SparkMax IntakeMotorLeft;
    SparkMax IntakeMotorRight;
    SparkMaxConfig IntakeLeftConfig, IntakeRightConfig;
 
    public Shintake(){
-        IntakeMotorLeft = new SparkFlex(Constants.INTAKE_MOTOR_LEFT, MotorType.kBrushless);
+        IntakeMotorLeft = new SparkMax(Constants.INTAKE_MOTOR_LEFT, MotorType.kBrushless);
         IntakeMotorRight = new SparkMax(Constants.INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
         IntakeLeftConfig = new SparkMaxConfig();
         IntakeRightConfig = new SparkMaxConfig();
         IntakeLeftConfig.idleMode(IdleMode.kCoast);
         IntakeRightConfig.idleMode(IdleMode.kCoast);
+
+        IntakeRightConfig.smartCurrentLimit(15);
+        IntakeLeftConfig.smartCurrentLimit(15);
+
+
         IntakeMotorLeft.configure(IntakeLeftConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
         IntakeMotorRight.configure(IntakeRightConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
     }
     public void intake(double speed) {//make dependent on trigger
         IntakeMotorLeft.set(-speed);
-        IntakeMotorRight.set(-speed);
-        System.out.println("kind of works");
+        IntakeMotorRight.set(-speed);   
     }
+      
     public void alt_intake() {//make dependent on trigger
         IntakeMotorLeft.set(-0.7);
         IntakeMotorRight.set(-0.7);
-        
-        System.out.println("kind of works");
     }
+
     public void shoot() {
         IntakeMotorLeft.set(Constants.INTAKE_OUTTAKE_SPEED);
         IntakeMotorRight.set(-Constants.INTAKE_OUTTAKE_SPEED);

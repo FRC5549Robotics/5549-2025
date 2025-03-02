@@ -108,7 +108,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       modules[i].syncTurningEncoders();
       
       new WaitCommand(1);
-      System.out.println("Module" + i + "is synced to" + modules[i].getTurnCANcoderAngle() + "  " + modules[i].getTurnEncoder().getPosition());
+      // System.out.println("Module" + i + "is synced to" + modules[i].getTurnCANcoderAngle() + "  " + modules[i].getTurnEncoder().getPosition());
     }
 
     m_targetPose = m_odometry.getPoseMeters();
@@ -181,11 +181,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     m_field.setRobotPose(m_odometry.getPoseMeters());
 
-    if (1 <= timer.get() && timer.get() <= 1.5) {
-      m_ahrs.zeroYaw();
-      System.out.println("Zeroed: " + getHeading());
-    }
+    // if (1 <= timer.get() && timer.get() <= 1.5) {
+    //   m_ahrs.zeroYaw();
+      // System.out.println("Zeroed: " + getHeading());
   }
+  
 
   public void updateOdometry() {
     double time = timer.get();
@@ -427,12 +427,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_rearRight.getState());
   }
 
-  public void followTrajectory(Optional<SwerveSample> optionalSample) {
-    SwerveSample sample = optionalSample.get();
+  public void followTrajectory(SwerveSample sample) {
     // Get the current pose of the robot
     Pose2d pose = getPose();
 
-    System.out.println(sample.vx + "" + sample.vy + "" + sample.omega);
+    System.out.println(sample.vx + ":" + sample.vy + ":" + sample.omega);
     // Generate the next speeds for the robot
     ChassisSpeeds speeds = new ChassisSpeeds(
         sample.vx - m_translationController.calculate(pose.getX(), sample.x),

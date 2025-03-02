@@ -11,9 +11,13 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.TrapezoidProfileCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 
@@ -22,7 +26,7 @@ public class Elevator extends SubsystemBase {
 
   TalonFX ElevatorRightMotor;
   TalonFX ElevatorLeftMotor;
-  PIDController ElevatorController;
+  ProfiledPIDController ElevatorController;
   DutyCycleEncoder ElevatorThroughbore;
   CommandXboxController XboxController;
   TalonFXConfiguration ElevatorRightConfigs;
@@ -49,11 +53,10 @@ public class Elevator extends SubsystemBase {
     ElevatorLeftConfigurator.apply(ElevatorLeftConfigs);
     ElevatorRightConfigurator.apply(ElevatorRightConfigs);
     //endregion
-    ElevatorController = new PIDController(0.6, 0.0, 0.00);
+    // ElevatorController = new PIDController(0.06, 0.0, 0.0);
+    ElevatorController = new ProfiledPIDController(0.06, 0.0, 0.0, new Constraints(-1, -0.1));
     ElevatorThroughbore = new DutyCycleEncoder(0, 360, Constants.PIVOT_OFFSET);
-      
-    };
-  
+  }
 
   public void elevate(double speed){
     ElevatorLeftMotor.set(speed);
@@ -68,6 +71,8 @@ public class Elevator extends SubsystemBase {
   public void ElevateToSetpoint(double leftElevatorSetpoint, double rightElevatorSetpoint) {
     ElevatorLeftMotor.set(ElevatorController.calculate(getLeftElevatorPosition(), leftElevatorSetpoint)); 
     ElevatorRightMotor.set(ElevatorController.calculate(getRightElevatorPosition(), rightElevatorSetpoint));
+    System.out.println("Left" + ElevatorController.calculate(getLeftElevatorPosition(), leftElevatorSetpoint));
+    System.out.println("Right" + ElevatorController.calculate(getRightElevatorPosition(), rightElevatorSetpoint));
   }
 
   public double getLeftElevatorPosition() {
@@ -93,18 +98,19 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // if (reset){
-    //   if (detectElevatorLeftCurrent() >= Constants.ELEVATOR_RESET_VOLTAGE && detectElevatorRightCurrent() >= Constants.ELEVATOR_RESET_VOLTAGE){
-    //     ElevatorLeftMotor.setPosition(0);
-    //     ElevatorRightMotor.setPosition(0);
-    //     reset = false;
-    //   }
-    //   else{
-    //     ElevatorLeftMotor.set(-0.05);
-    //     ElevatorRightMotor.set(0.05);
-    //   }
-    // }
-    SmartDashboard.putNumber("LeftElevatorEncoder", getRightElevatorPosition());
-    SmartDashboard.putNumber("RightElevatorEncoder", getLeftElevatorPosition());
+    if (reset){
+      if (detectElevatorLeftCurrent() >= Constants.ELEVATOR_RESET_CURRENT && detectElevatorRightCurrent() >= Constants.ELEVATOR_RESET_CURRENT){
+        ElevatorLeftMotor.setPosition(0);
+        ElevatorRightMotor.setPosition(0);
+        reset = false;
+        off();
+      }
+      else{
+        ElevatorLeftMotor.set(-0.2);
+        ElevatorRightMotor.set(0.2);
+      }
+    }
+    SmartDashboard.putNumber("LeftElevatorEncoder", getLeftElevatorPosition());
+    SmartDashboard.putNumber("RightElevatorEncoder", getRightElevatorPosition());
   }
 }

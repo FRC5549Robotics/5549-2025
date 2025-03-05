@@ -10,6 +10,7 @@ import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.DriveAuton;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
@@ -23,6 +24,7 @@ public class TwoDrive extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+      new WaitCommand(1),
       new DriveAuton(m_drive, timer, traj1),
       new DriveAuton(m_drive, timer, traj2)
     );

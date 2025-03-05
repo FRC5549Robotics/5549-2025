@@ -26,18 +26,14 @@ import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
   SparkMax ClimberMotor;
-  CommandXboxController XboxController;
-  boolean intakePosition = false;
-  boolean lock = true;
 
   /** Creates a new Pivot. */
-  public Climber(CommandXboxController xboxController) {
-    XboxController = xboxController;
+  public Climber() {
     ClimberMotor = new SparkMax(Constants.CLIMBER_MOTOR, MotorType.kBrushless);
   }
 
-  public void climb(double speed){
-    ClimberMotor.set(speed);
+  public void climb(){
+    ClimberMotor.set(0.15);
   }
 
   public void off(){

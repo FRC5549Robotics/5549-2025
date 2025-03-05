@@ -6,6 +6,8 @@ package frc.robot;
 
 
 import java.rmi.dgc.VMID;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Optional;
 
 import com.studica.frc.AHRS;
@@ -16,7 +18,9 @@ import choreo.auto.AutoFactory;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,13 +28,16 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Climb;
 import frc.robot.commands.DriveAuton;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ElevateAnalog;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
@@ -51,13 +58,29 @@ import frc.robot.subsystems.Elevator;
 public class RobotContainer {
   private final CommandXboxController m_controller = new CommandXboxController(Constants.DRIVE_CONTROLLER);
   private final CommandXboxController m_controller2 = new CommandXboxController(Constants.OPERATOR_CONTROLLER);
+
+  JoystickButton resetNavXButton = new JoystickButton(m_controller.getHID(), Constants.RESET_NAVX_BUTTON);
+
+  JoystickButton stowedButton = new JoystickButton(m_controller2.getHID(), 1);
+  JoystickButton pivotIntakeButton = new JoystickButton(m_controller2.getHID(), 4);
+  JoystickButton L1Button = new JoystickButton(m_controller2.getHID(), 3);
+  JoystickButton L2Button = new JoystickButton(m_controller2.getHID(), 5);
+  JoystickButton L3Button = new JoystickButton(m_controller2.getHID(), 6);
+  // JoystickButton L4Button = new JoystickButton(m_controller2.getHID(), 0);
+  POVButton AlgaeLowButton = new POVButton(m_controller2.getHID(), 180);
+  POVButton AlgaeHighButton = new POVButton(m_controller2.getHID(), 0);
+  JoystickButton climbButton = new JoystickButton(m_controller2.getHID(), Constants.CLIMB_BUTTON);
+  JoystickButton SetToZero = new JoystickButton(m_controller2.getHID(), Constants.RESET_ENCODER_BUTTON);
+  Trigger[] setpointButtons = {stowedButton, pivotIntakeButton, L1Button, L2Button, L3Button, AlgaeHighButton, AlgaeLowButton};
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   //region Subsystems
   private final AHRS m_ahrs = new AHRS(NavXComType.kMXP_SPI);
   public final DrivetrainSubsystem m_drive = new DrivetrainSubsystem(m_ahrs);
-  private final Pivot m_pivot = new Pivot(m_controller2);
-  private final Elevator m_elevator = new Elevator(m_controller2);
+  private final Pivot m_pivot = new Pivot(m_controller2, setpointButtons);
+  private final Elevator m_elevator = new Elevator(m_controller2, setpointButtons);
   private final Shintake m_shintake = new Shintake();
+  private final Climber m_climber = new Climber();
 
 
   // private final Climber m_climber = new Climber();
@@ -78,20 +101,16 @@ public class RobotContainer {
   Command myTrajectory = autoFactory.trajectoryCmd("Test1");
   Command resetOdometry = autoFactory.resetOdometry("Test1");
   //endregion
-  JoystickButton resetNavXButton = new JoystickButton(m_controller.getHID(), Constants.RESET_NAVX_BUTTON);
 
-  //Pivot Buttons
-  JoystickButton stowedButton = new JoystickButton(m_controller2.getHID(), 4);
-  JoystickButton pivotIntakeButton = new JoystickButton(m_controller2.getHID(), 1);
-  JoystickButton L1Button = new JoystickButton(m_controller2.getHID(), 3);
-  JoystickButton L2Button = new JoystickButton(m_controller2.getHID(), 5);
-  JoystickButton L3Button = new JoystickButton(m_controller2.getHID(), 6);
-  // JoystickButton L4Button = new JoystickButton(m_controller2.getHID(), 0);
-  // JoystickButton AlgaeLowButton = new JoystickButton(m_controller2.getHID(), 90);
-  // JoystickButton AlgaeHighButton = new JoystickButton(m_controller2.getHID(), 0);
-
-  JoystickButton SetToZero = new JoystickButton(m_controller2.getHID(), Constants.RESET_ENCODER_BUTTON);
-
+  boolean elevatorStatus(){
+    return !(stowedButton.getAsBoolean() 
+            || pivotIntakeButton.getAsBoolean()
+            || L1Button.getAsBoolean()
+            || L2Button.getAsBoolean()
+            || L3Button.getAsBoolean()
+            || AlgaeHighButton.getAsBoolean()
+            || AlgaeLowButton.getAsBoolean());
+  }
 
 
   public RobotContainer() {
@@ -124,16 +143,17 @@ public class RobotContainer {
     L2Button.whileTrue(new Setpoints(m_pivot, PivotTarget.L2, m_elevator));
     L3Button.whileTrue(new Setpoints(m_pivot, PivotTarget.L3, m_elevator));   
     // L4Button.whileTrue(new Setpoints(m_pivot, PivotTarget.L4, m_elevator)); 
-    // AlgaeLowButton.whileTrue(new Setpoints(m_pivot, PivotTarget.AlgaeLow, m_elevator));
-    // AlgaeHighButton.whileTrue(new Setpoints(m_pivot, PivotTarget.AlgaeHigh, m_elevator));
-    pivotIntakeButton.or(stowedButton).or(L1Button).or(L2Button).or(L3Button).onFalse(new InstantCommand(m_pivot::off));
-    // or(L4Button).or(AlgaeLowButton).or(AlgaeHighButton)
+    AlgaeLowButton.whileTrue(new Setpoints(m_pivot, PivotTarget.AlgaeLow, m_elevator));
+    AlgaeHighButton.whileTrue(new Setpoints(m_pivot, PivotTarget.AlgaeHigh, m_elevator));
+    pivotIntakeButton.or(stowedButton).or(L1Button).or(L2Button).or(L3Button).or(AlgaeLowButton).or(AlgaeHighButton).onFalse(new InstantCommand(m_pivot::off));
+
     //region Basic Testing Methods
     m_controller2.axisGreaterThan(Constants.PIVOT_JOYSTICK, Constants.PIVOT_DEADBAND).or(m_controller2.axisLessThan(Constants.PIVOT_JOYSTICK, -Constants.PIVOT_DEADBAND)).onTrue(new PivotAnalog(m_pivot, m_controller2)).onFalse(new InstantCommand(m_pivot::off));
     m_controller2.axisGreaterThan(Constants.ELEVATOR_JOYSTICK, Constants.ELEVATOR_DEADBAND).or(m_controller2.axisLessThan(Constants.ELEVATOR_JOYSTICK, -Constants.ELEVATOR_DEADBAND)).onTrue(new ElevateAnalog(m_elevator, m_controller2)).onFalse(new InstantCommand(m_elevator::off));
 
     //Set Pivot and Elevator Position to Zero
     SetToZero.whileTrue(new ParallelCommandGroup(new InstantCommand(m_pivot::ResetEncoder), new InstantCommand(m_elevator::ResetEncoder)));
+    climbButton.onTrue(new InstantCommand(m_climber::climb)).onFalse(new InstantCommand(m_climber::off));
     // m_controller2.axisGreaterThan(Constants.CLIMBER_JOYSTICK, Constants.CLIMBER_DEADBAND).or(m_controller2.axisLessThan(Constants.CLIMBER_JOYSTICK, -Constants.CLIMBER_DEADBAND)).onTrue(new Climb(m_climber, m_controller2)).onFalse(new InstantCommand(m_climber::off));
     m_controller2.axisGreaterThan(Constants.INTAKE_TRIGGER, 0.7).onTrue(new InstantCommand(m_shintake::intake));
     m_controller2.axisGreaterThan(Constants.OUTTAKE_TRIGGER, 0.7).onTrue(new InstantCommand(m_shintake::shoot));
@@ -149,6 +169,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Commands.sequence(resetOdometry, myTrajectory);
+    // return Commands.sequence(new WaitCommand(0.25), resetOdometry, myTrajectory);
+    return Commands.sequence(new WaitCommand(0.25), resetOdometry);
     }
   }

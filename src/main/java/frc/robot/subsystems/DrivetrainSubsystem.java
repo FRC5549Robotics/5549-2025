@@ -122,7 +122,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     timer.reset();
     timer.start();
     lastTime = 0;
-    new WaitCommand(0.5);
   }
 
   public void syncEncoders() {
@@ -227,10 +226,21 @@ public class DrivetrainSubsystem extends SubsystemBase {
       getModulePositions(), 
       pose);
   }
+  public void resetOdometry() {
+    /* Don't reset all the motors' positions. Otherwise the robot thinks it has teleported!
+    for (SwerveModule module: modules) {
+      module.resetDistance();
+    }
+    */
+    m_odometry.resetPosition(
+      getHeading(), 
+      getModulePositions(), 
+      new Pose2d(0, 0, new Rotation2d(0)));
+  }
 
   /**
    * Method to rotate the relative orientation of the target pose at a given rate.
-   *
+   *    
    * @param deltaTheta How much to rotate the target orientation per loop.
    */
   public void rotateRelative(Rotation2d deltaTheta) {

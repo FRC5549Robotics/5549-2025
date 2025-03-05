@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.TrapezoidProfileCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
@@ -33,10 +35,12 @@ public class Elevator extends SubsystemBase {
   TalonFXConfigurator ElevatorRightConfigurator;
   TalonFXConfiguration ElevatorLeftConfigs;
   TalonFXConfigurator ElevatorLeftConfigurator;
+  Trigger[] setpointButtons;
   boolean reset = true;
   
-  public Elevator(CommandXboxController xboxController) {
+  public Elevator(CommandXboxController xboxController, Trigger[] SetpointButtons) {
     XboxController = xboxController;
+    setpointButtons = SetpointButtons;
     ElevatorLeftMotor = new TalonFX(Constants.ELEVATOR_LEFT_MOTOR);
     ElevatorRightMotor = new TalonFX(Constants.ELEVATOR_RIGHT_MOTOR);
     //region Configs
@@ -54,7 +58,7 @@ public class Elevator extends SubsystemBase {
     ElevatorRightConfigurator.apply(ElevatorRightConfigs);
     //endregion
     // ElevatorController = new PIDController(0.06, 0.0, 0.0);
-    ElevatorController = new ProfiledPIDController(0.06, 0.0, 0.0, new Constraints(-1, -0.1));
+    ElevatorController = new ProfiledPIDController(0.015, 0.0, 0.0, new Constraints(-1, -0.1));
     ElevatorThroughbore = new DutyCycleEncoder(0, 360, Constants.PIVOT_OFFSET);
   }
 
@@ -71,8 +75,6 @@ public class Elevator extends SubsystemBase {
   public void ElevateToSetpoint(double leftElevatorSetpoint, double rightElevatorSetpoint) {
     ElevatorLeftMotor.set(ElevatorController.calculate(getLeftElevatorPosition(), leftElevatorSetpoint)); 
     ElevatorRightMotor.set(ElevatorController.calculate(getRightElevatorPosition(), rightElevatorSetpoint));
-    System.out.println("Left" + ElevatorController.calculate(getLeftElevatorPosition(), leftElevatorSetpoint));
-    System.out.println("Right" + ElevatorController.calculate(getRightElevatorPosition(), rightElevatorSetpoint));
   }
 
   public double getLeftElevatorPosition() {
@@ -95,6 +97,15 @@ public class Elevator extends SubsystemBase {
     ElevatorRightMotor.setPosition(0);
   }
 
+  boolean elevatorState(Trigger[] buttons){
+    for (Trigger trigger : buttons) {
+      if(trigger.getAsBoolean()){
+        return false;
+      }
+    }
+    return true;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -110,6 +121,12 @@ public class Elevator extends SubsystemBase {
         ElevatorRightMotor.set(0.2);
       }
     }
+
+    if(elevatorState(setpointButtons)){
+      ElevatorLeftMotor.set(ElevatorController.calculate(getLeftElevatorPosition(), Constants.ELEVATOR_LEFT_STOWED_SETPOINT)); 
+      ElevatorRightMotor.set(ElevatorController.calculate(getRightElevatorPosition(), Constants.ELEVATOR_RIGHT_STOWED_SETPOINT));
+    }
+
     SmartDashboard.putNumber("LeftElevatorEncoder", getLeftElevatorPosition());
     SmartDashboard.putNumber("RightElevatorEncoder", getRightElevatorPosition());
   }

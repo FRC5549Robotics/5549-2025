@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 
 public class Pivot extends SubsystemBase {
@@ -38,8 +39,12 @@ public class Pivot extends SubsystemBase {
   boolean intakePosition = false;
   boolean lock = true;
   boolean reset = true;
+  DutyCycleEncoder Throughbore;
+  Trigger[] setpointButtons;
+
   /** Creates a new Pivot. */
-  public Pivot(CommandXboxController xboxController) {
+  public Pivot(CommandXboxController xboxController, Trigger[] SetpointButtons) {
+    setpointButtons = SetpointButtons;
     XboxController = xboxController;
     PivotMotor = new TalonFX(Constants.PIVOT_MOTOR);
     //region Configs
@@ -66,7 +71,7 @@ public class Pivot extends SubsystemBase {
   }
 
   public void PivotToSetpoint(double pivotSetpoint) {
-    // PivotMotor.set(PivotController.calculate(getPivotPosition(), pivotSetpoint)); 
+    PivotMotor.set(PivotController.calculate(getPivotPosition(), pivotSetpoint)); 
   }
 
   public double detectPivotMotorCurrent() {
@@ -76,6 +81,16 @@ public class Pivot extends SubsystemBase {
   public void ResetEncoder() {
     PivotMotor.setPosition(0);
   }
+
+  boolean pivotState(Trigger[] buttons){
+    for (Trigger trigger : buttons) {
+      if(trigger.getAsBoolean()){
+        return false;
+      }
+    }
+    return true;
+  }
+
   
   @Override
   public void periodic() {
@@ -90,6 +105,10 @@ public class Pivot extends SubsystemBase {
         
     //   }
     // }
+    if(pivotState(setpointButtons)){
+      PivotMotor.set(PivotController.calculate(getPivotPosition(), Constants.PIVOT_STOWED_SETPOINT));
+    }
+
     SmartDashboard.putNumber("PivotEncoder", getPivotPosition());
   }
 }

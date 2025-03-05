@@ -67,6 +67,7 @@ public class SwerveModule extends SubsystemBase {
         m_turningConfig.encoder.positionConversionFactor(360.0 / Constants.kTurnPositionConversionFactor);
         
         m_driveConfig.closedLoop.pid(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD);
+        m_driveConfig.closedLoopRampRate(Constants.SLEW_RATE_LIMITER);
         m_turningConfig.closedLoop.pid(Constants.kTurningP, Constants.kTurningI, Constants.kTurningD);
         
 

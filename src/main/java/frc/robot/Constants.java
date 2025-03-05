@@ -102,6 +102,7 @@ public final class Constants {
   public static final double kDriveI = 0.0;
   public static final double kDriveD = 0.0;
   public static final double kDriveFF = 0.1;
+  public static final double SLEW_RATE_LIMITER = 3;
 
   public static final double kTurningP = 0.005;
   public static final double kTurningI = 0.0;
@@ -170,7 +171,7 @@ public final class Constants {
     public static final double PIVOT_L3_SETPOINT = 25.727051;
     public static final double PIVOT_ALGAE_LOW_SETPOINT = 0;
     public static final double PIVOT_ALGAE_HIGH_SETPOINT = -6.309570;
-    
+
     public static final double PIVOT_RESET_VOLTAGE = 20;
 
   //Shintake Constants

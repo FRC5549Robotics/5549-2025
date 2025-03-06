@@ -82,10 +82,8 @@ public class RobotContainer {
   private final Shintake m_shintake = new Shintake();
   private final Climber m_climber = new Climber();
 
-
   // private final Climber m_climber = new Climber();
   //endregion
-
 
   //region Trajectories
   AutoFactory autoFactory = new AutoFactory(
@@ -101,17 +99,6 @@ public class RobotContainer {
   Command myTrajectory = autoFactory.trajectoryCmd("Test1");
   Command resetOdometry = autoFactory.resetOdometry("Test1");
   //endregion
-
-  boolean elevatorStatus(){
-    return !(stowedButton.getAsBoolean() 
-            || pivotIntakeButton.getAsBoolean()
-            || L1Button.getAsBoolean()
-            || L2Button.getAsBoolean()
-            || L3Button.getAsBoolean()
-            || AlgaeHighButton.getAsBoolean()
-            || AlgaeLowButton.getAsBoolean());
-  }
-
 
   public RobotContainer() {
     // Configure the trigger bindings

@@ -97,6 +97,17 @@ public class Elevator extends SubsystemBase {
     ElevatorRightMotor.setPosition(0);
   }
 
+  public void Snapback() {
+    if(elevatorState(setpointButtons)){
+      ElevatorLeftMotor.set(ElevatorController.calculate(getLeftElevatorPosition(), Constants.ELEVATOR_LEFT_STOWED_SETPOINT)); 
+      ElevatorRightMotor.set(ElevatorController.calculate(getRightElevatorPosition(), Constants.ELEVATOR_RIGHT_STOWED_SETPOINT));
+    }
+    // if (Math.abs(getLeftElevatorPosition()) < 2 && Math.abs(getRightElevatorPosition()) < 2) {
+    //   ElevatorLeftMotor.set(0);
+    //   ElevatorRightMotor.set(0);
+    // }
+  }
+
   boolean elevatorState(Trigger[] buttons){
     for (Trigger trigger : buttons) {
       if(trigger.getAsBoolean()){
@@ -122,10 +133,10 @@ public class Elevator extends SubsystemBase {
       }
     }
 
-    if(elevatorState(setpointButtons)){
-      ElevatorLeftMotor.set(ElevatorController.calculate(getLeftElevatorPosition(), Constants.ELEVATOR_LEFT_STOWED_SETPOINT)); 
-      ElevatorRightMotor.set(ElevatorController.calculate(getRightElevatorPosition(), Constants.ELEVATOR_RIGHT_STOWED_SETPOINT));
-    }
+    // if(elevatorState(setpointButtons)){
+    //   ElevatorLeftMotor.set(ElevatorController.calculate(getLeftElevatorPosition(), Constants.ELEVATOR_LEFT_STOWED_SETPOINT)); 
+    //   ElevatorRightMotor.set(ElevatorController.calculate(getRightElevatorPosition(), Constants.ELEVATOR_RIGHT_STOWED_SETPOINT));
+    // }
 
     SmartDashboard.putNumber("LeftElevatorEncoder", getLeftElevatorPosition());
     SmartDashboard.putNumber("RightElevatorEncoder", getRightElevatorPosition());

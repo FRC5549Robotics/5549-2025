@@ -4,8 +4,11 @@
 
 package frc.robot.commands;
 
+import java.util.Set;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Pivot.PivotTarget;
@@ -72,12 +75,20 @@ public class Setpoints extends Command {
     }
   }
 
+  boolean pivotState(Trigger[] buttons){
+    for (Trigger trigger : buttons) {
+      if(trigger.getAsBoolean()){
+        return false;
+      }
+    }
+    return true;
+  }
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     m_pivot.PivotToSetpoint(pivotSetpoint);
     elevator.ElevateToSetpoint(elevatorLeftSetpoint, elevatorRightSetpoint);
-
   }
 
   // Called once the command ends or is interrupted.

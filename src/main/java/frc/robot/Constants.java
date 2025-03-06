@@ -171,6 +171,7 @@ public final class Constants {
     public static final double PIVOT_L3_SETPOINT = 25.727051;
     public static final double PIVOT_ALGAE_LOW_SETPOINT = 0;
     public static final double PIVOT_ALGAE_HIGH_SETPOINT = -6.309570;
+    public static final double PIVOT_MIN_THRESHOLD = 5;
 
     public static final double PIVOT_RESET_VOLTAGE = 20;
 
@@ -178,7 +179,7 @@ public final class Constants {
     public static final int INTAKE_MOTOR_LEFT = 33;
     public static final int INTAKE_MOTOR_RIGHT = 40;
     public static final int SHOOTER_INTAKE_BUTTON = 6;
-    public static final double INTAKE_OUTTAKE_SPEED = 0.75;
+    public static final double INTAKE_OUTTAKE_SPEED = 0.5;
     public static final int SHINTAKE_BUTTON = 0;
     public static final int INTAKE_TRIGGER = 2;
     public static final int OUTTAKE_TRIGGER = 3;

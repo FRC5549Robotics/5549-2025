@@ -18,6 +18,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
+import frc.robot.subsystems.Elevator;
 
 public class Pivot extends SubsystemBase {
   public enum PivotTarget{
@@ -41,9 +42,10 @@ public class Pivot extends SubsystemBase {
   boolean reset = true;
   DutyCycleEncoder Throughbore;
   Trigger[] setpointButtons;
+  Elevator m_elevator;
 
   /** Creates a new Pivot. */
-  public Pivot(CommandXboxController xboxController, Trigger[] SetpointButtons) {
+  public Pivot(CommandXboxController xboxController, Trigger[] SetpointButtons, Elevator elevator) {
     setpointButtons = SetpointButtons;
     XboxController = xboxController;
     PivotMotor = new TalonFX(Constants.PIVOT_MOTOR);
@@ -60,6 +62,9 @@ public class Pivot extends SubsystemBase {
 
     //endregion
     PivotController = new PIDController(0.015, 0.0, 0.005);
+    m_elevator = elevator;
+
+    DutyCycleEncoder Throughbore = new DutyCycleEncoder(0);
   }
 
   public void pivot(double speed){
@@ -87,6 +92,15 @@ public class Pivot extends SubsystemBase {
     PivotMotor.setPosition(0);
   }
 
+  public void Snapback() {
+    if(pivotState(setpointButtons)){
+      PivotMotor.set(PivotController.calculate(getPivotPosition(), Constants.PIVOT_STOWED_SETPOINT));
+    }
+    // if (Math.abs(getPivotPosition()) < 2) {
+    //   PivotMotor.set(0);
+    // }
+  }
+
   boolean pivotState(Trigger[] buttons){
     for (Trigger trigger : buttons) {
       if(trigger.getAsBoolean()){
@@ -100,17 +114,18 @@ public class Pivot extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // if (reset){
-    //   if (detectPivotMotorCurrent() >= Constants.PIVOT_RESET_VOLTAGE){
-    //     PivotMotor.setPosition(0);
-    //     reset = false;
-    //   }
-    //   else{
-    //     PivotMotor.set(0.05);
+    if (reset){
+      if (detectPivotMotorCurrent() >= Constants.PIVOT_RESET_VOLTAGE){
+        PivotMotor.setPosition(0);
+        reset = false;
+      }
+      else{
+        PivotMotor.set(0.05);
         
-    //   }
-    // }
-    if(pivotState(setpointButtons)){
+      }
+    }
+
+    if(pivotState(setpointButtons) && Math.abs(m_elevator.getRightElevatorPosition()) < 5 && Math.abs(m_elevator.getLeftElevatorPosition()) < 5){
       PivotMotor.set(PivotController.calculate(getPivotPosition(), Constants.PIVOT_STOWED_SETPOINT));
     }
 

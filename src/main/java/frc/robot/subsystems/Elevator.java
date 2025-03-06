@@ -50,10 +50,10 @@ public class Elevator extends SubsystemBase {
     ElevatorRightConfigurator = ElevatorRightMotor.getConfigurator();
     ElevatorLeftConfigs.CurrentLimits.StatorCurrentLimit = 60;
     ElevatorLeftConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-    ElevatorLeftConfigs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    ElevatorLeftConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     ElevatorRightConfigs.CurrentLimits.StatorCurrentLimit = 60;
     ElevatorRightConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-    ElevatorRightConfigs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    ElevatorRightConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     ElevatorLeftConfigurator.apply(ElevatorLeftConfigs);
     ElevatorRightConfigurator.apply(ElevatorRightConfigs);
     //endregion
@@ -63,7 +63,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void elevate(double speed){
-    // ElevatorLeftMotor.set(speed);
+    ElevatorLeftMotor.set(speed);
     ElevatorRightMotor.set(-speed);
   }
 
@@ -97,6 +97,17 @@ public class Elevator extends SubsystemBase {
     ElevatorRightMotor.setPosition(0);
   }
 
+  public void Snapback() {
+    if(elevatorState(setpointButtons)){
+      ElevatorLeftMotor.set(ElevatorController.calculate(getLeftElevatorPosition(), Constants.ELEVATOR_LEFT_STOWED_SETPOINT)); 
+      ElevatorRightMotor.set(ElevatorController.calculate(getRightElevatorPosition(), Constants.ELEVATOR_RIGHT_STOWED_SETPOINT));
+    }
+    // if (Math.abs(getLeftElevatorPosition()) < 2 && Math.abs(getRightElevatorPosition()) < 2) {
+    //   ElevatorLeftMotor.set(0);
+    //   ElevatorRightMotor.set(0);
+    // }
+  }
+
   boolean elevatorState(Trigger[] buttons){
     for (Trigger trigger : buttons) {
       if(trigger.getAsBoolean()){
@@ -122,10 +133,10 @@ public class Elevator extends SubsystemBase {
       }
     }
 
-    if(elevatorState(setpointButtons)){
-      ElevatorLeftMotor.set(ElevatorController.calculate(getLeftElevatorPosition(), Constants.ELEVATOR_LEFT_STOWED_SETPOINT)); 
-      ElevatorRightMotor.set(ElevatorController.calculate(getRightElevatorPosition(), Constants.ELEVATOR_RIGHT_STOWED_SETPOINT));
-    }
+    // if(elevatorState(setpointButtons)){
+    //   ElevatorLeftMotor.set(ElevatorController.calculate(getLeftElevatorPosition(), Constants.ELEVATOR_LEFT_STOWED_SETPOINT)); 
+    //   ElevatorRightMotor.set(ElevatorController.calculate(getRightElevatorPosition(), Constants.ELEVATOR_RIGHT_STOWED_SETPOINT));
+    // }
 
     SmartDashboard.putNumber("LeftElevatorEncoder", getLeftElevatorPosition());
     SmartDashboard.putNumber("RightElevatorEncoder", getRightElevatorPosition());

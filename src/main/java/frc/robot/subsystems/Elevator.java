@@ -50,10 +50,10 @@ public class Elevator extends SubsystemBase {
     ElevatorRightConfigurator = ElevatorRightMotor.getConfigurator();
     ElevatorLeftConfigs.CurrentLimits.StatorCurrentLimit = 60;
     ElevatorLeftConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-    ElevatorLeftConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    ElevatorLeftConfigs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     ElevatorRightConfigs.CurrentLimits.StatorCurrentLimit = 60;
     ElevatorRightConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-    ElevatorRightConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    ElevatorRightConfigs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     ElevatorLeftConfigurator.apply(ElevatorLeftConfigs);
     ElevatorRightConfigurator.apply(ElevatorRightConfigs);
     //endregion
@@ -63,7 +63,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void elevate(double speed){
-    ElevatorLeftMotor.set(speed);
+    // ElevatorLeftMotor.set(speed);
     ElevatorRightMotor.set(-speed);
   }
 

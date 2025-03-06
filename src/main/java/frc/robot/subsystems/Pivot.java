@@ -54,6 +54,10 @@ public class Pivot extends SubsystemBase {
     PivotConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
     PivotConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     PivotConfigurator.apply(PivotConfigs);
+    Throughbore = new DutyCycleEncoder(0, 360, Constants.PIVOT_OFFSET);
+    
+    
+
     //endregion
     PivotController = new PIDController(0.015, 0.0, 0.005);
   }
@@ -67,7 +71,8 @@ public class Pivot extends SubsystemBase {
   }
 
   public double getPivotPosition() {
-    return PivotMotor.getPosition().getValueAsDouble(); 
+    // return PivotMotor.getPosition().getValueAsDouble(); 
+    return Throughbore.get();
   }
 
   public void PivotToSetpoint(double pivotSetpoint) {

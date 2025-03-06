@@ -178,7 +178,7 @@ public final class Constants {
     public static final int INTAKE_MOTOR_LEFT = 33;
     public static final int INTAKE_MOTOR_RIGHT = 40;
     public static final int SHOOTER_INTAKE_BUTTON = 6;
-    public static final double INTAKE_OUTTAKE_SPEED = 0.5;
+    public static final double INTAKE_OUTTAKE_SPEED = 0.75;
     public static final int SHINTAKE_BUTTON = 0;
     public static final int INTAKE_TRIGGER = 2;
     public static final int OUTTAKE_TRIGGER = 3;

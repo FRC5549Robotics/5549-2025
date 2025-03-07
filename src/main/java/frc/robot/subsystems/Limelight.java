@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -23,11 +24,14 @@ public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
   PhotonCamera camera;
   DrivetrainSubsystem m_drivetrain;
+  XboxController xbox_controller;
   PIDController controller = new PIDController(0, 0, 0);
 
-  public Limelight(DrivetrainSubsystem drivetrain) {
+  public Limelight(DrivetrainSubsystem drivetrain, XboxController xcontroller) {
     camera = new PhotonCamera("photonvision");
     m_drivetrain = drivetrain;
+    xbox_controller = xcontroller;
+
   }
 
   public void turnToTarget() {
@@ -55,6 +59,11 @@ public class Limelight extends SubsystemBase {
     //     else {
     //       thetaT = thetaA-Math.PI;
     //     }
+
+    //     double[] controllerVals = {xbox_controller.getLeftY(), xbox_controller.getLeftX()};
+
+
+    //     m_drivetrian.generateSpeeds()
     //     m_drivetrain.drive(new ChassisSpeeds(0, 0, controller.calculate(thetaR, thetaT)), false);
         
 

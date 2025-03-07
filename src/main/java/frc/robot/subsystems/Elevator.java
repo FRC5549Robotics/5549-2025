@@ -59,7 +59,6 @@ public class Elevator extends SubsystemBase {
     //endregion
     // ElevatorController = new PIDController(0.06, 0.0, 0.0);
     ElevatorController = new ProfiledPIDController(0.015, 0.0, 0.0, new Constraints(-1, -0.1));
-    ElevatorThroughbore = new DutyCycleEncoder(0, 360, Constants.PIVOT_OFFSET);
   }
 
   public void elevate(double speed){
@@ -132,11 +131,6 @@ public class Elevator extends SubsystemBase {
         ElevatorRightMotor.set(0.2);
       }
     }
-
-    // if(elevatorState(setpointButtons)){
-    //   ElevatorLeftMotor.set(ElevatorController.calculate(getLeftElevatorPosition(), Constants.ELEVATOR_LEFT_STOWED_SETPOINT)); 
-    //   ElevatorRightMotor.set(ElevatorController.calculate(getRightElevatorPosition(), Constants.ELEVATOR_RIGHT_STOWED_SETPOINT));
-    // }
 
     SmartDashboard.putNumber("LeftElevatorEncoder", getLeftElevatorPosition());
     SmartDashboard.putNumber("RightElevatorEncoder", getRightElevatorPosition());

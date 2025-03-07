@@ -56,15 +56,13 @@ public class Pivot extends SubsystemBase {
     PivotConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
     PivotConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     PivotConfigurator.apply(PivotConfigs);
-    Throughbore = new DutyCycleEncoder(0, 360, Constants.PIVOT_OFFSET);
+    // Throughbore = new DutyCycleEncoder(0, 360, Constants.PIVOT_OFFSET);
     
     
 
     //endregion
     PivotController = new PIDController(0.015, 0.0, 0.005);
     m_elevator = elevator;
-
-    DutyCycleEncoder Throughbore = new DutyCycleEncoder(0);
   }
 
   public void pivot(double speed){
@@ -76,8 +74,8 @@ public class Pivot extends SubsystemBase {
   }
 
   public double getPivotPosition() {
-    // return PivotMotor.getPosition().getValueAsDouble(); 
-    return Throughbore.get();
+    return PivotMotor.getPosition().getValueAsDouble(); 
+    // return Throughbore.get();
   }
 
   public void PivotToSetpoint(double pivotSetpoint) {
@@ -114,21 +112,17 @@ public class Pivot extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("PivotEncoder", getPivotPosition());
+   
     if (reset){
-      if (detectPivotMotorCurrent() >= Constants.PIVOT_RESET_VOLTAGE){
+      if (detectPivotMotorCurrent() >= Constants.PIVOT_RESET_CURRENT){
         PivotMotor.setPosition(0);
         reset = false;
+        off();
       }
       else{
-        PivotMotor.set(0.05);
-        
+        PivotMotor.set(-0.2);
       }
     }
-
-    if(pivotState(setpointButtons) && Math.abs(m_elevator.getRightElevatorPosition()) < 5 && Math.abs(m_elevator.getLeftElevatorPosition()) < 5){
-      PivotMotor.set(PivotController.calculate(getPivotPosition(), Constants.PIVOT_STOWED_SETPOINT));
-    }
-
-    SmartDashboard.putNumber("PivotEncoder", getPivotPosition());
   }
 }

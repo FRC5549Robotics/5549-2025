@@ -4,10 +4,6 @@
 
 package frc.robot;
 
-
-import java.rmi.dgc.VMID;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Optional;
 
 import com.studica.frc.AHRS;
@@ -19,6 +15,7 @@ import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,6 +37,7 @@ import frc.robot.commands.ElevateAnalog;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shintake;
 // import frc.robot.subsystems.Elevator.PivotTarget;
@@ -72,6 +70,7 @@ public class RobotContainer {
   POVButton AlgaeHighButton = new POVButton(m_controller2.getHID(), 0);
   JoystickButton climbButton = new JoystickButton(m_controller2.getHID(), Constants.CLIMB_BUTTON);
   JoystickButton SetToZero = new JoystickButton(m_controller2.getHID(), Constants.RESET_ENCODER_BUTTON);
+  JoystickButton AutoAlign = new JoystickButton(m_controller.getHID(), 2);
   Trigger[] setpointButtons = {stowedButton, pivotIntakeButton, L1Button, L2Button, L3Button, AlgaeHighButton, AlgaeLowButton};
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -82,11 +81,10 @@ public class RobotContainer {
   private final Pivot m_pivot = new Pivot(m_controller2, setpointButtons, m_elevator);
   private final Shintake m_shintake = new Shintake();
   private final Climber m_climber = new Climber();
-
+  private final Limelight m_limelight = new Limelight(m_drive);
 
   // private final Climber m_climber = new Climber();
   //endregion
-
 
   //region Trajectories
   AutoFactory autoFactory = new AutoFactory(
@@ -102,17 +100,6 @@ public class RobotContainer {
   Command myTrajectory = autoFactory.trajectoryCmd("Test1");
   Command resetOdometry = autoFactory.resetOdometry("Test1");
   //endregion
-
-  boolean elevatorStatus(){
-    return !(stowedButton.getAsBoolean() 
-            || pivotIntakeButton.getAsBoolean()
-            || L1Button.getAsBoolean()
-            || L2Button.getAsBoolean()
-            || L3Button.getAsBoolean()
-            || AlgaeHighButton.getAsBoolean()
-            || AlgaeLowButton.getAsBoolean());
-  }
-
 
   public RobotContainer() {
     // Configure the trigger bindings
@@ -136,18 +123,21 @@ public class RobotContainer {
       resetNavXButton.onTrue(new InstantCommand(m_drive::zeroGyroscope));
     //endregion
 
-    //Pivot
-    
+    //region Coral Manipulation
     pivotIntakeButton.whileTrue(new Setpoints(m_pivot, PivotTarget.Intake, m_elevator));
     stowedButton.whileTrue(new Setpoints(m_pivot, PivotTarget.Stowed, m_elevator));
     L1Button.whileTrue(new Setpoints(m_pivot, PivotTarget.L1, m_elevator));
     L2Button.whileTrue(new Setpoints(m_pivot, PivotTarget.L2, m_elevator));
     L3Button.whileTrue(new Setpoints(m_pivot, PivotTarget.L3, m_elevator));
     // L4Button.whileTrue(new Setpoints(m_pivot, PivotTarget.L4, m_elevator)); 
-
     AlgaeLowButton.whileTrue(new Setpoints(m_pivot, PivotTarget.AlgaeLow, m_elevator));
     AlgaeHighButton.whileTrue(new Setpoints(m_pivot, PivotTarget.AlgaeHigh, m_elevator));
-    pivotIntakeButton.or(stowedButton).or(L1Button).or(L2Button).or(L3Button).or(AlgaeLowButton).or(AlgaeHighButton).onFalse(new InstantCommand(m_pivot::off));
+    pivotIntakeButton.or(stowedButton).or(L1Button).or(L2Button).or(L3Button).or(AlgaeLowButton).or(AlgaeHighButton).onFalse(new SnapBack(m_pivot, m_elevator));
+
+    AutoAlign.onTrue(new InstantCommand(m_limelight::turnToTarget));
+    m_controller2.axisGreaterThan(Constants.INTAKE_TRIGGER, 0.7).onTrue(new InstantCommand(m_shintake::intake)).onFalse(new InstantCommand(m_shintake::off));
+    m_controller2.axisGreaterThan(Constants.OUTTAKE_TRIGGER, 0.7).onTrue(new InstantCommand(m_shintake::shoot)).onFalse(new InstantCommand(m_shintake::off));
+    //endregion
 
     //region Basic Testing Methods
     m_controller2.axisGreaterThan(Constants.PIVOT_JOYSTICK, Constants.PIVOT_DEADBAND).or(m_controller2.axisLessThan(Constants.PIVOT_JOYSTICK, -Constants.PIVOT_DEADBAND)).onTrue(new PivotAnalog(m_pivot, m_controller2)).onFalse(new InstantCommand(m_pivot::off));
@@ -157,8 +147,6 @@ public class RobotContainer {
     SetToZero.whileTrue(new ParallelCommandGroup(new InstantCommand(m_pivot::ResetEncoder), new InstantCommand(m_elevator::ResetEncoder)));
     climbButton.onTrue(new InstantCommand(m_climber::climb)).onFalse(new InstantCommand(m_climber::off));
     // m_controller2.axisGreaterThan(Constants.CLIMBER_JOYSTICK, Constants.CLIMBER_DEADBAND).or(m_controller2.axisLessThan(Constants.CLIMBER_JOYSTICK, -Constants.CLIMBER_DEADBAND)).onTrue(new Climb(m_climber, m_controller2)).onFalse(new InstantCommand(m_climber::off));
-    m_controller2.axisGreaterThan(Constants.INTAKE_TRIGGER, 0.7).onTrue(new InstantCommand(m_shintake::intake)).onFalse(new InstantCommand(m_shintake::off));
-    m_controller2.axisGreaterThan(Constants.OUTTAKE_TRIGGER, 0.7).onTrue(new InstantCommand(m_shintake::shoot)).onFalse(new InstantCommand(m_shintake::off));
     //endregion  
   }
 
@@ -170,6 +158,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     // return Commands.sequence(new WaitCommand(0.25), resetOdometry, myTrajectory);
-    return Commands.sequence(new WaitCommand(0.25), resetOdometry);
+    return Commands.sequence(new WaitCommand(0.25), resetOdometry, myTrajectory);
     }
   }

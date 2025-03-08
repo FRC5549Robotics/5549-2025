@@ -22,20 +22,24 @@ public class SnapBack extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    ending = false;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (Math.abs(m_elevator.getRightElevatorPosition()) < 5 && Math.abs(m_elevator.getLeftElevatorPosition()) < 5) {
+      System.out.println("SNAPBACK ALL");
       m_pivot.Snapback();
       m_elevator.Snapback();
     }
     else {
+      System.out.println("SNAPBACK E");
       m_elevator.Snapback();
     }
 
-    if (Math.abs(m_elevator.getLeftElevatorPosition()) < 2 && Math.abs(m_elevator.getRightElevatorPosition()) < 2 && Math.abs(m_pivot.getPivotPosition()) < 2) {
+    if (Math.abs(m_elevator.getLeftElevatorPosition()) < 5 && Math.abs(m_elevator.getRightElevatorPosition()) < 5 && Math.abs(m_pivot.getPivotPosition()) < 5) {
       ending = true;
     }
   }

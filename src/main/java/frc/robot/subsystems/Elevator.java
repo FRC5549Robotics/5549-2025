@@ -97,7 +97,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void Snapback() {
-    if(elevatorState(setpointButtons)){
+    if(elevatorState(setpointButtons) && !reset){
       ElevatorLeftMotor.set(ElevatorController.calculate(getLeftElevatorPosition(), Constants.ELEVATOR_LEFT_STOWED_SETPOINT)); 
       ElevatorRightMotor.set(ElevatorController.calculate(getRightElevatorPosition(), Constants.ELEVATOR_RIGHT_STOWED_SETPOINT));
     }

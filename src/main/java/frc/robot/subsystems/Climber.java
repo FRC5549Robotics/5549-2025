@@ -33,7 +33,8 @@ public class Climber extends SubsystemBase {
   }
 
   public void climb(){
-    ClimberMotor.set(0.15);
+    ClimberMotor.set(0.35);
+    System.out.println("climbing");
   }
 
   public void off(){

@@ -68,6 +68,7 @@ public class RobotContainer {
   // JoystickButton L4Button = new JoystickButton(m_controller2.getHID(), 0);
   POVButton AlgaeLowButton = new POVButton(m_controller2.getHID(), 180);
   POVButton AlgaeHighButton = new POVButton(m_controller2.getHID(), 0);
+  POVButton ProcessorButton = new POVButton(m_controller2.getHID(), 90);
   JoystickButton climbButton = new JoystickButton(m_controller2.getHID(), Constants.CLIMB_BUTTON);
   JoystickButton SetToZero = new JoystickButton(m_controller2.getHID(), Constants.RESET_ENCODER_BUTTON);
   JoystickButton AutoAlign = new JoystickButton(m_controller.getHID(), 2);
@@ -81,7 +82,7 @@ public class RobotContainer {
   private final Pivot m_pivot = new Pivot(m_controller2, setpointButtons, m_elevator);
   private final Shintake m_shintake = new Shintake();
   private final Climber m_climber = new Climber();
-  private final Limelight m_limelight = new Limelight(m_drive);
+  private final Limelight m_limelight = new Limelight(m_drive, m_controller); 
 
   // private final Climber m_climber = new Climber();
   //endregion
@@ -132,7 +133,7 @@ public class RobotContainer {
     // L4Button.whileTrue(new Setpoints(m_pivot, PivotTarget.L4, m_elevator)); 
     AlgaeLowButton.whileTrue(new Setpoints(m_pivot, PivotTarget.AlgaeLow, m_elevator));
     AlgaeHighButton.whileTrue(new Setpoints(m_pivot, PivotTarget.AlgaeHigh, m_elevator));
-    pivotIntakeButton.or(stowedButton).or(L1Button).or(L2Button).or(L3Button).or(AlgaeLowButton).or(AlgaeHighButton).onFalse(new SnapBack(m_pivot, m_elevator));
+    // pivotIntakeButton.or(stowedButton).or(L1Button).or(L2Button).or(L3Button).or(AlgaeLowButton).or(AlgaeHighButton).or(ProcessorButton).whileFalse(new SnapBack(m_pivot, m_elevator));
 
     AutoAlign.onTrue(new InstantCommand(m_limelight::turnToTarget));
     m_controller2.axisGreaterThan(Constants.INTAKE_TRIGGER, 0.7).onTrue(new InstantCommand(m_shintake::intake)).onFalse(new InstantCommand(m_shintake::off));

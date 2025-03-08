@@ -29,7 +29,8 @@ public class Pivot extends SubsystemBase {
     L3,
     L4,
     AlgaeLow,
-    AlgaeHigh
+    AlgaeHigh,
+    Processor
   }
   TalonFX PivotMotor;
   PIDController PivotController;
@@ -61,7 +62,7 @@ public class Pivot extends SubsystemBase {
     
 
     //endregion
-    PivotController = new PIDController(0.015, 0.0, 0.005);
+    PivotController = new PIDController(0.035, 0.0, 0.005);
     m_elevator = elevator;
   }
 
@@ -91,7 +92,7 @@ public class Pivot extends SubsystemBase {
   }
 
   public void Snapback() {
-    if(pivotState(setpointButtons)){
+    if(pivotState(setpointButtons) && !reset){
       PivotMotor.set(PivotController.calculate(getPivotPosition(), Constants.PIVOT_STOWED_SETPOINT));
     }
     // if (Math.abs(getPivotPosition()) < 2) {

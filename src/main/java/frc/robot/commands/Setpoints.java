@@ -73,6 +73,11 @@ public class Setpoints extends Command {
       elevatorLeftSetpoint = Constants.ELEVATOR_LEFT_ALGAE_HIGH_SETPOINT;
       elevatorRightSetpoint = Constants.ELEVATOR_RIGHT_ALGAE_HIGH_SETPOINT;
     }
+    else if(target == PivotTarget.Processor){
+      pivotSetpoint = Constants.PIVOT_ALGAE_HIGH_SETPOINT;
+      elevatorLeftSetpoint = Constants.ELEVATOR_LEFT_ALGAE_HIGH_SETPOINT;
+      elevatorRightSetpoint = Constants.ELEVATOR_RIGHT_ALGAE_HIGH_SETPOINT;
+    }
   }
 
   boolean pivotState(Trigger[] buttons){

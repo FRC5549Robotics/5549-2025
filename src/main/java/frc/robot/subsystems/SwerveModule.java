@@ -60,8 +60,7 @@ public class SwerveModule extends SubsystemBase {
         m_driveConfig = new SparkMaxConfig();
         m_turningConfig = new SparkMaxConfig();
         m_driveConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40, 40);
-        m_turningConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40, 40);
-        
+        m_turningConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40, 40);           
         m_driveConfig.encoder.velocityConversionFactor(Constants.kDriveConversionFactor / 60.0);
         m_driveConfig.encoder.positionConversionFactor(Constants.kDriveConversionFactor);
         m_turningConfig.encoder.positionConversionFactor(360.0 / Constants.kTurnPositionConversionFactor);
@@ -218,6 +217,16 @@ public class SwerveModule extends SubsystemBase {
 
     public void syncTurningEncoders() {
         m_turningEncoder.setPosition(m_turningCANCoder.getAbsolutePosition().getValueAsDouble()*360);
+    }
+
+    public void switchToCoast() {
+        m_driveConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(40, 40);
+        m_turningConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(40, 40);
+    }
+
+    public void switchToBrake() {
+        m_driveConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40, 40);
+        m_turningConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40, 40);
     }
 
     /** Zeros all the SwerveModule encoders. */

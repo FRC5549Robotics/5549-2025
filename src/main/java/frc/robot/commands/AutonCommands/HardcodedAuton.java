@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.DriveAuton;
 import frc.robot.commands.HardcodedDrive;
 import frc.robot.commands.Setpoints;
+import frc.robot.commands.SetpointsAuton;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
@@ -25,10 +26,16 @@ public class HardcodedAuton extends SequentialCommandGroup {
   public HardcodedAuton(DrivetrainSubsystem drivetrain, Pivot pivot, Elevator elevator, Shintake shintake) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new InstantCommand(drivetrain::resetOdometry), new Setpoints(pivot, PivotTarget.L3, elevator),
+    addCommands(
+    new InstantCommand(drivetrain::resetOdometry),
+    new WaitCommand(1),
+    // new HardcodedDrive(drivetrain),
+    new SetpointsAuton(pivot, PivotTarget.L1, elevator),
     new HardcodedDrive(drivetrain),
-    new ParallelCommandGroup(new Setpoints(pivot, PivotTarget.L3, elevator), new InstantCommand(shintake::shoot), new WaitCommand(0.25)),
-    new InstantCommand(shintake::off)
+    new SetpointsAuton(pivot, PivotTarget.L1, elevator),
+    new ShootAuton(shintake, 1.5),
+    new InstantCommand(shintake::off),
+    new SetpointsAuton(pivot, PivotTarget.Stowed, elevator)
     );
   }
 }

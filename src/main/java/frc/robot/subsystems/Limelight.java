@@ -18,9 +18,12 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.LimelightHelpers;
 
 
 public class Limelight extends SubsystemBase {
@@ -28,66 +31,37 @@ public class Limelight extends SubsystemBase {
   PhotonCamera camera;
   DrivetrainSubsystem m_drivetrain;
   CommandXboxController xbox_controller;
-  PIDController controller = new PIDController(0, 0, 0);
+  PIDController controller = new PIDController(0.1, 0, 0);
   private double thetaDot;
+  NetworkTable limelightTable;
 
   public Limelight(DrivetrainSubsystem drivetrain, CommandXboxController xcontroller) {
-    camera = new PhotonCamera("photonvision");
     m_drivetrain = drivetrain;
     xbox_controller = xcontroller;
-
+    limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
   }
 
-  public void turnToTarget() {
-    var results = camera.getAllUnreadResults();
-    var resultSize = results.get(results.size() - 1);
-    AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
-    
-    var latestResult = camera.getLatestResult();
-    if (latestResult.hasTargets()) {
-      // At least one AprilTag was seen by the camera
-      for (var target : latestResult.getTargets()) {
-        //Alt approach: Gets robot and april tag 3D poses to calculate angle
-        Transform3d robotToCam = new Transform3d(new Translation3d(0, 0.0, 0), new Rotation3d(0,0,0));
-        Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), robotToCam);
-        double thetaR = robotPose.getRotation().getZ();
-        Pose3d tagPose = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get();
-        double thetaA = tagPose.getRotation().getZ();
-        double thetaT = 0;
-        double thetaDot = 0;
-        if (thetaA < 0) {
-          thetaT = Math.PI+thetaA;
-        }
-        if (thetaA == 0) {
-          thetaT = (Math.PI-thetaA);
-        }
-        else {
-          thetaT = thetaA-Math.PI;
-        }
-
-        // double[] controllerVals = {xbox_controller.getLeftY(), xbox_controller.getLeftX(), xbox_controller.getRightX()};
-
-        // boolean[] bool_values = {false, false, true};
-        // List<Double> speeds = DrivetrainSubsystem.generateSpeeds(bool_values, controllerVals);
-        // thetaDot = speeds.get(2);
-        //ChassisSpeeds.fromFieldRelativeSpeeds(xDot, yDot, thetaDot, drivetrain.getHeading());
-        
-        m_drivetrain.drive(new ChassisSpeeds(0, 0, controller.calculate(thetaR, thetaT)), false);
-        
-
-        // double distanceToTarget = PhotonUtils.getDistanceToPose(robotPose, targetPose);
-        // Translation2d trans = PhotonUtils.estimateCameraToTargetTranslation(0, null);
-        // var targetYaw = target.getYaw();
-        // m_drivetrain.drive(new ChassisSpeeds(0, 0, controller.calculate(targetYaw)), false);
-      }
+  public double turnToTarget() {
+    if (xbox_controller.getHID().getBButton()) {
+    double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
+    double angle = s[4];
+    System.out.println(angle);
+    return controller.calculate(angle, 0);
     }
-    }
-
-  public void ttt2() {}
-
+    return 0.0;
+  }
   
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
+    // System.out.println(s);
+    // var s = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_targetspace").getDoubleArray(new double[6]);
+    // System.out.println(s);
+
+    // for (int i = 0; i<s.length; i++) {
+    //   System.out.println(s[i]);
+    // }
+    // System.out.println(s[4]);
   }}
 

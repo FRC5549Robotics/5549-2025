@@ -58,7 +58,7 @@ public class Elevator extends SubsystemBase {
     ElevatorRightConfigurator.apply(ElevatorRightConfigs);
     //endregion
     // ElevatorController = new PIDController(0.06, 0.0, 0.0);
-    ElevatorController = new ProfiledPIDController(0.015, 0.0, 0.0, new Constraints(-1, -0.1));
+    ElevatorController = new ProfiledPIDController(0.015, 0.0, 0.0, new Constraints(-1, -0.07));
   }
 
   public void elevate(double speed){
@@ -114,6 +114,19 @@ public class Elevator extends SubsystemBase {
       }
     }
     return true;
+  }
+
+  public void reset() {
+    if (detectElevatorLeftCurrent() >= Constants.ELEVATOR_RESET_CURRENT && detectElevatorRightCurrent() >= Constants.ELEVATOR_RESET_CURRENT){
+      ElevatorLeftMotor.setPosition(0);
+      ElevatorRightMotor.setPosition(0);
+      reset = false;
+      off();
+    }
+    else{
+      ElevatorLeftMotor.set(-0.2);
+      ElevatorRightMotor.set(0.2);
+    }
   }
 
   @Override

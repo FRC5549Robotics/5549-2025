@@ -30,7 +30,8 @@ public class Pivot extends SubsystemBase {
     L4,
     AlgaeLow,
     AlgaeHigh,
-    Processor
+    Processor,
+    Climb
   }
   TalonFX PivotMotor;
   PIDController PivotController;
@@ -46,7 +47,7 @@ public class Pivot extends SubsystemBase {
   Elevator m_elevator;
 
   /** Creates a new Pivot. */
-  public Pivot(CommandXboxController xboxController, Trigger[] SetpointButtons, Elevator elevator) {
+  public Pivot(CommandXboxController xboxController, Trigger[] SetpointButtons) {
     setpointButtons = SetpointButtons;
     XboxController = xboxController;
     PivotMotor = new TalonFX(Constants.PIVOT_MOTOR);
@@ -63,7 +64,7 @@ public class Pivot extends SubsystemBase {
 
     //endregion
     PivotController = new PIDController(0.035, 0.0, 0.005);
-    m_elevator = elevator;
+    
   }
 
   public void pivot(double speed){
@@ -107,6 +108,17 @@ public class Pivot extends SubsystemBase {
       }
     }
     return true;
+  }
+
+  public void reset() {
+    if (detectPivotMotorCurrent() >= Constants.PIVOT_RESET_CURRENT){
+      PivotMotor.setPosition(0);
+      reset = false;
+      off();
+    }
+    else{
+      PivotMotor.set(-0.2);
+    }
   }
 
   

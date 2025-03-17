@@ -135,28 +135,29 @@ public final class Constants {
     public static final int ELEVATOR_ENCODER = 8;
     public static final double ELEVATOR_OFFSET = 0.331;  
 
-    public static final double ELEVATOR_LEFT_INTAKE_SETPOINT = 12.59;
+    public static final double ELEVATOR_LEFT_INTAKE_SETPOINT = 14;
     public static final double ELEVATOR_LEFT_STOWED_SETPOINT = 0.385254;
     public static final double ELEVATOR_LEFT_L1_SETPOINT = 9.886230; 
-    public static final double ELEVATOR_LEFT_L2_SETPOINT = 24.823730;
-    public static final double ELEVATOR_LEFT_L3_SETPOINT = 40.04;
+    public static final double ELEVATOR_LEFT_L2_SETPOINT = 24.373730;
+    public static final double ELEVATOR_LEFT_L3_SETPOINT = 44.87;
     // public static final double ELEVATOR_LEFT_L4_SETPOINT = 0;
     public static final double ELEVATOR_LEFT_ALGAE_LOW_SETPOINT = 31.122559; 
-    public static final double ELEVATOR_LEFT_ALGAE_HIGH_SETPOINT = 47.534668;
-    public static final double ELEVATOR_LEFT_PROCESSOR_SETPOINT = 0;
+    public static final double ELEVATOR_LEFT_ALGAE_HIGH_SETPOINT = 47.034668;
+    public static final double ELEVATOR_LEFT_PROCESSOR_SETPOINT = 0.385254;
 
-    public static final double ELEVATOR_RIGHT_INTAKE_SETPOINT = -12.59;
+    public static final double ELEVATOR_RIGHT_INTAKE_SETPOINT = -14;
     public static final double ELEVATOR_RIGHT_STOWED_SETPOINT = -0.442383;
     public static final double ELEVATOR_RIGHT_L1_SETPOINT = -9.911133;
-    public static final double ELEVATOR_RIGHT_L2_SETPOINT = -24.851563;
-    public static final double ELEVATOR_RIGHT_L3_SETPOINT = -40.04;
+    public static final double ELEVATOR_RIGHT_L2_SETPOINT = -24.361563;
+    public static final double ELEVATOR_RIGHT_L3_SETPOINT = -42.04;
+    
     // public static final double ELEVATOR_RIGHT_L4_SETPOINT = 0;
     public static final double ELEVATOR_RIGHT_ALGAE_LOW_SETPOINT = -31.146973;  
-    public static final double ELEVATOR_RIGHT_ALGAE_HIGH_SETPOINT = -47.515137;
-    public static final double ELEVATOR_RIGHT_PROCESSOR_SETPOINT = 0;
+    public static final double ELEVATOR_RIGHT_ALGAE_HIGH_SETPOINT = -47.015137;
+    public static final double ELEVATOR_RIGHT_PROCESSOR_SETPOINT = -0.442383;
 
     public static final double ELEVATOR_RESET_CURRENT = 3;
-    public static final int RESET_ENCODER_BUTTON = 7;
+    // public static final int RESET_ENCODER_BUTTON = 7;
   
     //Pivot Constants
     public static final int PIVOT_MOTOR = 32;
@@ -166,16 +167,18 @@ public final class Constants {
     public static final int PIVOT_ENCODER = 4;
     public static final double PIVOT_OFFSET = 0.331;
 
-    public static final double PIVOT_INTAKE_SETPOINT = 14.1;
+    public static final double PIVOT_INTAKE_SETPOINT = 10.24;
     public static final double PIVOT_STOWED_SETPOINT = 0;
-    public static final double PIVOT_L1_SETPOINT = 29.8;
-    public static final double PIVOT_L2_SETPOINT = 32.85;
-    public static final double PIVOT_L3_SETPOINT = 32.05;
-    public static final double PIVOT_ALGAE_LOW_SETPOINT = 30.8;
-    public static final double PIVOT_ALGAE_HIGH_SETPOINT = 32.075195;
+    public static final double PIVOT_L1_SETPOINT = 18.78;
+    public static final double PIVOT_L2_SETPOINT = 26.2;
+    public static final double PIVOT_L3_SETPOINT = 25.63;
+    public static final double PIVOT_ALGAE_LOW_SETPOINT = 25.13;
+    public static final double PIVOT_ALGAE_HIGH_SETPOINT = 23.57;
+    public static final double PIVOT_CLIMB_SETPOINT = 28.8;
     public static final double PIVOT_MIN_THRESHOLD = 5;
     public static final double PIVOT_RESET_CURRENT = 4;
-    public static final double PIVOT_PROCESSOR_SETPOINT = 0;
+    public static final double PIVOT_PROCESSOR_SETPOINT = 17.29;
+
 
     public static final double PIVOT_RESET_VOLTAGE = 20;
 
@@ -184,9 +187,10 @@ public final class Constants {
     public static final int INTAKE_MOTOR_RIGHT = 40;
     public static final int SHOOTER_INTAKE_BUTTON = 6;
     public static final double INTAKE_OUTTAKE_SPEED = 0.5;
+    public static final double OUTTAKE_L1_SPEED = 0.4;
     public static final int SHINTAKE_BUTTON = 0;
-    public static final int INTAKE_TRIGGER = 2;
-    public static final int OUTTAKE_TRIGGER = 3;
+    public static final int INTAKE_TRIGGER = 3;
+    public static final int OUTTAKE_TRIGGER = 2;
 
   //Climb Constants
     public static final int CLIMBER_MOTOR = 24;
@@ -194,5 +198,6 @@ public final class Constants {
     public static final double CLIMBER_DEADBAND = 0.05;
     public static final double CLIMBER_SCALING_FACTOR = 0.15;
     public static final int CLIMB_BUTTON = 8;
+    public static final int CLIMB_UNWIND = 7;
 
 }

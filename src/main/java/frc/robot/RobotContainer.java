@@ -74,7 +74,8 @@ public class RobotContainer {
   JoystickButton climbButton = new JoystickButton(m_controller2.getHID(), Constants.CLIMB_BUTTON);
   JoystickButton climbUnwind = new JoystickButton(m_controller2.getHID(), Constants.CLIMB_UNWIND);
   JoystickButton l1EjectButton = new JoystickButton(m_controller2.getHID(), 2);
-  JoystickButton AutoAlign = new JoystickButton(m_controller.getHID(), 2);
+  JoystickButton AutoAlignLeft = new JoystickButton(m_controller.getHID(), 2);
+  JoystickButton AutoAlignRight = new JoystickButton(m_controller.getHID(), 3);
   Trigger[] setpointButtons = {stowedButton, pivotIntakeButton, L1Button, L2Button, L3Button, AlgaeHighButton, AlgaeLowButton};
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -123,6 +124,7 @@ public class RobotContainer {
     //region Drivetrain
       m_controller.axisGreaterThan(0, 0.07).or(m_controller.axisGreaterThan(1, 0.07)).or(m_controller.axisGreaterThan(4, 0.07))
       .or(m_controller.axisLessThan(0, -0.07)).or(m_controller.axisLessThan(1, -0.07)).or(m_controller.axisLessThan(4, -0.07))
+      .or(AutoAlignLeft).or(AutoAlignRight)
       .onTrue(new DriveCommand(m_drive, m_controller, m_elevator, m_limelight));
       resetNavXButton.onTrue(new InstantCommand(m_drive::zeroGyroscope));
     //endregion

@@ -48,9 +48,13 @@ public class DriveCommand extends Command {
           List<Double> speeds = DrivetrainSubsystem.generateSpeeds(bool_values, controllerVals);
           xDot = speeds.get(0);
           yDot = speeds.get(1);
-          thetaDot = m_Limelight.turnToTarget();
+          // thetaDot = m_Limelight.turnToTarget();
 
-          chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xDot, yDot, thetaDot, drivetrain.getHeading());
+          double[] dots = m_Limelight.turnToTarget();
+
+          chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(dots[0], 0, dots[2], drivetrain.getHeading());
+
+          drivetrain.drive(chassisSpeeds, true);
         }
         else{
           boolean[] bool_values = {true, true, true};
@@ -62,18 +66,20 @@ public class DriveCommand extends Command {
           fieldRelative = true;
         
           chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xDot, yDot, thetaDot, drivetrain.getHeading());
+
+          if(xDot != 0 || yDot != 0 || thetaDot != 0){
+            drivetrain.drive(chassisSpeeds, true);
+          }
+          else{
+            drivetrain.snap();
+          }
   
         }
               // double[] scaledVals = new double[controllerVals.length];
         // for (int i = 0; i < controllerVals.length; i ++) {
         //   scaledVals[i] = ((controllerVals[i]*(((48-m_elevator.getLeftElevatorPosition())*0.01)+0.52)));
         // }  
-        if(xDot != 0 || yDot != 0 || thetaDot != 0){
-          drivetrain.drive(chassisSpeeds, true);
-        }
-        else{
-          drivetrain.snap();
-        }
+       
 
     }
 }

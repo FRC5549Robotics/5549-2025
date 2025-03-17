@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.LimelightHelpers;
+import frc.robot.LimelightHelpers.RawFiducial;
 
 
 public class Limelight extends SubsystemBase {
@@ -32,6 +33,7 @@ public class Limelight extends SubsystemBase {
   DrivetrainSubsystem m_drivetrain;
   CommandXboxController xbox_controller;
   PIDController controller = new PIDController(0.1, 0, 0);
+  PIDController controller2 = new PIDController(0.1, 0, 0);
   private double thetaDot;
   NetworkTable limelightTable;
 
@@ -41,14 +43,39 @@ public class Limelight extends SubsystemBase {
     limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
   }
 
-  public double turnToTarget() {
+  public double[] turnToTarget() {
     if (xbox_controller.getHID().getBButton()) {
-    double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
-    double angle = s[4];
-    System.out.println(angle);
-    return controller.calculate(angle, 0);
+      double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
+      // Pose3d bot = LimelightHelpers.getBotPose3d_wpiBlue("limelight");
+
+      
+      Pose3d ttr = LimelightHelpers.getBotPose3d_TargetSpace("limelight");
+      
+      double angle = s[4];
+      System.out.println(angle);
+
+      // if (Math.abs(angle) < 5) {
+      //   System.out.println("TRANSLATE");
+      //   double[] speeds = {controller2.calculate(ttr.getZ(), 0), 0, 0};
+      //   return speeds;
+      // }
+      // else {
+      //   System.out.println("ANGLE");
+      //   double[] speeds = {0, 0, controller.calculate(angle, 0)};
+      //   return speeds;
+      // }
+
+      double[] speeds = {controller.calculate(ttr.getZ()), 0, controller.calculate(angle, 0)};
+      return speeds;
+
+      // double alpha = (tx - angle);
+      // double x = distToRobot*Math.cos(alpha);
+      // double y = distToRobot*Math.sin(alpha);
+      
     }
-    return 0.0;
+    else {
+      return null;
+    }
   }
   
   @Override

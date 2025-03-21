@@ -51,8 +51,8 @@ public class DriveCommand extends Command {
           yDot = speeds.get(1);
           // thetaDot = m_Limelight.turnToTarget();
 
-          double[] dots = m_Limelight.turnToTarget();
-
+          double[] dots = m_controller.rightBumper().getAsBoolean() ? m_Limelight.turnToTarget(true) : m_Limelight.turnToTarget(false);
+          
           if (dots != null) {
             chassisSpeeds = new ChassisSpeeds(dots[0], dots[1], dots[2]);
 

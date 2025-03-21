@@ -200,4 +200,12 @@ public final class Constants {
     public static final int CLIMB_BUTTON = 7;
     public static final int CLIMB_UNWIND = 8;
 
+    public static final double ROT_SETPOINT_REEF_ALIGNMENT = 0.0;
+    public static final double ROT_TOLERANCE_REEF_ALIGNMENT = 0.0;
+    public static final double X_SETPOINT_REEF_ALIGNMENT = 0.0;
+    public static final double X_TOLERANCE_REEF_ALIGNMENT = 0.0;    
+    public static final double Y_SETPOINT_RIGHT_REEF_ALIGNMENT = 0.0;
+    public static final double Y_SETPOINT_LEFT_REEF_ALIGNMENT = 0.0;
+    public static final double Y_TOLERANCE_REEF_ALIGNMENT = 0.0;
+
 }

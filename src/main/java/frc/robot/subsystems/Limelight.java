@@ -23,6 +23,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.RawFiducial;
 
@@ -34,6 +35,9 @@ public class Limelight extends SubsystemBase {
   CommandXboxController xbox_controller;
   PIDController controller = new PIDController(0.06, 0, 0.001);
   PIDController controller2 = new PIDController(1.4, 0, 0.001);
+  PIDController xController = new PIDController(0.06, 0, 0.001);
+  PIDController yController = new PIDController(1.4, 0, 0.001);
+  PIDController rotController = new PIDController(0, 0, 0);
   private double thetaDot;
   NetworkTable limelightTable;
 
@@ -43,7 +47,26 @@ public class Limelight extends SubsystemBase {
     limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
   }
 
-  public double[] turnToTarget() {
+  public double[] turnToTarget(Boolean isRightScore) {
+    // rotController.setSetpoint(Constants.ROT_SETPOINT_REEF_ALIGNMENT);
+    // rotController.setTolerance(Constants.ROT_TOLERANCE_REEF_ALIGNMENT);
+
+    // xController.setSetpoint(Constants.X_SETPOINT_REEF_ALIGNMENT);
+    // xController.setTolerance(Constants.X_TOLERANCE_REEF_ALIGNMENT);
+
+    // yController.setSetpoint(isRightScore ? Constants.Y_SETPOINT_RIGHT_REEF_ALIGNMENT : Constants.Y_SETPOINT_LEFT_REEF_ALIGNMENT);
+    // yController.setTolerance(Constants.Y_TOLERANCE_REEF_ALIGNMENT);
+
+    // if (LimelightHelpers.getTV("limelight")) {
+    //   double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
+    //   // Pose3d bot = LimelightHelpers.getBotPose3d_wpiBlue("limelight");
+    //   Pose3d ttr = LimelightHelpers.getBotPose3d_TargetSpace("limelight");
+    //   double angle = s[4];
+    //   double[] speeds = {controller2.calculate(0, ttr.getZ()+0.3), controller2.calculate(0, -ttr.getX()-.18), controller.calculate(angle, 0)};
+    //   return speeds;
+    // }
+
+
     double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
       // Pose3d bot = LimelightHelpers.getBotPose3d_wpiBlue("limelight");
     Pose3d ttr = LimelightHelpers.getBotPose3d_TargetSpace("limelight");

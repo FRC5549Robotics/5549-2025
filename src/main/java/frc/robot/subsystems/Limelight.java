@@ -32,8 +32,8 @@ public class Limelight extends SubsystemBase {
   PhotonCamera camera;
   DrivetrainSubsystem m_drivetrain;
   CommandXboxController xbox_controller;
-  PIDController controller = new PIDController(0.1, 0, 0);
-  PIDController controller2 = new PIDController(0.1, 0, 0);
+  PIDController controller = new PIDController(0.06, 0, 0.001);
+  PIDController controller2 = new PIDController(1.4, 0, 0.001);
   private double thetaDot;
   NetworkTable limelightTable;
 
@@ -44,40 +44,28 @@ public class Limelight extends SubsystemBase {
   }
 
   public double[] turnToTarget() {
-    if (xbox_controller.getHID().getBButton()) {
-      double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
+    double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
       // Pose3d bot = LimelightHelpers.getBotPose3d_wpiBlue("limelight");
-
-      
-      Pose3d ttr = LimelightHelpers.getBotPose3d_TargetSpace("limelight");
-      
-      double angle = s[4];
-      System.out.println(angle);
-
-      // if (Math.abs(angle) < 5) {
-      //   System.out.println("TRANSLATE");
-      //   double[] speeds = {controller2.calculate(ttr.getZ(), 0), 0, 0};
-      //   return speeds;
-      // }
-      // else {
-      //   System.out.println("ANGLE");
-      //   double[] speeds = {0, 0, controller.calculate(angle, 0)};
-      //   return speeds;
-      // }
-
-      double[] speeds = {controller.calculate(ttr.getZ()), 0, controller.calculate(angle, 0)};
-      return speeds;
-
-      // double alpha = (tx - angle);
-      // double x = distToRobot*Math.cos(alpha);
-      // double y = distToRobot*Math.sin(alpha);
-      
+    Pose3d ttr = LimelightHelpers.getBotPose3d_TargetSpace("limelight");
+    double angle = s[4];
+    
+    if(LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight").tagCount > 0){
+      if (xbox_controller.getHID().getLeftBumperButton()){
+        // System.out.println(controller2.calculate(0, -ttr.getX()-0.18));
+        // System.out.println(controller.calculate(angle, 0));
+        double[] speeds = {controller2.calculate(0, ttr.getZ()+0.3), controller2.calculate(0, -ttr.getX()-.18), controller.calculate(angle, 0)};
+        return speeds;
+        
+      }
+      else if (xbox_controller.getHID().getRightBumperButton()) {
+        double[] speeds = {controller2.calculate(0, ttr.getZ()+0.3), controller2.calculate(0, -ttr.getX()+.18), controller.calculate(angle, 0)};
+        return speeds;
+      }
     }
-    else {
-      return null;
-    }
+    return null;
   }
   
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

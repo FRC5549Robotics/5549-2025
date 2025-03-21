@@ -58,7 +58,7 @@ public class Elevator extends SubsystemBase {
     ElevatorRightConfigurator.apply(ElevatorRightConfigs);
     //endregion
     // ElevatorController = new PIDController(0.06, 0.0, 0.0);
-    ElevatorController = new ProfiledPIDController(0.015, 0.0, 0.0, new Constraints(-1, -0.07));
+    ElevatorController = new ProfiledPIDController(0.03, 0.0, 0.0, new Constraints(-1, -0.1));
   }
 
   public void elevate(double speed){

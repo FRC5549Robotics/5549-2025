@@ -63,7 +63,7 @@ public class Pivot extends SubsystemBase {
     
 
     //endregion
-    PivotController = new PIDController(0.035, 0.0, 0.005);
+    PivotController = new PIDController(0.04, 0.0, 0.005);
     
   }
 

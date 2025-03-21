@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.Constants;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -43,7 +44,7 @@ public class DriveCommand extends Command {
     @Override
     public void execute() {
         double[] controllerVals = {m_controller.getLeftY(), m_controller.getLeftX(), m_controller.getRightX()};
-        if (m_controller.b().getAsBoolean()) {
+        if (m_controller.leftBumper().getAsBoolean() || m_controller.rightBumper().getAsBoolean()) {
           boolean[] bool_values = {true, true, false};
           List<Double> speeds = DrivetrainSubsystem.generateSpeeds(bool_values, controllerVals);
           xDot = speeds.get(0);
@@ -52,10 +53,14 @@ public class DriveCommand extends Command {
 
           double[] dots = m_Limelight.turnToTarget();
 
-          chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(dots[0], 0, dots[2], drivetrain.getHeading());
+          if (dots != null) {
+            chassisSpeeds = new ChassisSpeeds(dots[0], dots[1], dots[2]);
 
-          drivetrain.drive(chassisSpeeds, true);
+            drivetrain.drive(chassisSpeeds, true);
+
+          }
         }
+
         else{
           boolean[] bool_values = {true, true, true};
           List<Double> speeds = DrivetrainSubsystem.generateSpeeds(bool_values, controllerVals);
@@ -65,6 +70,7 @@ public class DriveCommand extends Command {
            
           fieldRelative = true;
         
+          // chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xDot, yDot, thetaDot, drivetrain.getHeading());
           chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xDot, yDot, thetaDot, drivetrain.getHeading());
 
           if(xDot != 0 || yDot != 0 || thetaDot != 0){

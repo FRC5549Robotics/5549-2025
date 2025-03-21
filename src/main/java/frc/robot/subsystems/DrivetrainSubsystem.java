@@ -85,7 +85,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   //target pose and controller
   Pose2d m_targetPose;
-  PIDController m_thetaController = new PIDController(0.1, 0.0, 0.0);
+  PIDController m_thetaController = new PIDController(0.1, 0.0, 0.001);
   PIDController m_translationController = new PIDController(0.1,0,0);
 
   ChassisSpeeds speeds; 

@@ -74,8 +74,8 @@ public class RobotContainer {
   JoystickButton climbButton = new JoystickButton(m_controller2.getHID(), Constants.CLIMB_BUTTON);
   JoystickButton climbUnwind = new JoystickButton(m_controller2.getHID(), Constants.CLIMB_UNWIND);
   JoystickButton l1EjectButton = new JoystickButton(m_controller2.getHID(), 2);
-  JoystickButton AutoAlignLeft = new JoystickButton(m_controller.getHID(), 2);
-  JoystickButton AutoAlignRight = new JoystickButton(m_controller.getHID(), 3);
+  JoystickButton AutoAlignLeft = new JoystickButton(m_controller.getHID(), 3);
+  JoystickButton AutoAlignRight = new JoystickButton(m_controller.getHID(), 2);
   Trigger[] setpointButtons = {stowedButton, pivotIntakeButton, L1Button, L2Button, L3Button, AlgaeHighButton, AlgaeLowButton};
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -144,7 +144,8 @@ public class RobotContainer {
     climbSetpointButton.onFalse(new InstantCommand(m_drive::switchToBrake));
     pivotIntakeButton.or(stowedButton).or(L1Button).or(L2Button).or(L3Button).or(AlgaeLowButton).or(AlgaeHighButton).or(ProcessorButton).or(climbSetpointButton).whileFalse(new SnapBack(m_pivot, m_elevator));
 
-    // AutoAlign.onTrue(new InstantCommand(m_limelight::turnToTarget));
+    AutoAlignLeft.onTrue(new InstantCommand(m_limelight::turnToTarget));
+    AutoAlignRight.onTrue(new InstantCommand(m_limelight::turnToTarget));
     m_controller2.axisGreaterThan(Constants.INTAKE_TRIGGER, 0.7).onTrue(new InstantCommand(m_shintake::intake)).onFalse(new InstantCommand(m_shintake::off));
     l1EjectButton.onTrue(new InstantCommand(m_shintake::shootL1)).onFalse(new InstantCommand(m_shintake::off));
     m_controller2.axisGreaterThan(Constants.OUTTAKE_TRIGGER, 0.7).onTrue(new InstantCommand(m_shintake::shoot)).onFalse(new InstantCommand(m_shintake::off));

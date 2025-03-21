@@ -35,10 +35,9 @@ public class Limelight extends SubsystemBase {
   CommandXboxController xbox_controller;
   PIDController controller = new PIDController(0.06, 0, 0.001);
   PIDController controller2 = new PIDController(1.4, 0, 0.001);
-  PIDController xController = new PIDController(0.06, 0, 0.001);
+  PIDController xController = new PIDController(1.4, 0, 0.001);
   PIDController yController = new PIDController(1.4, 0, 0.001);
-  PIDController rotController = new PIDController(0, 0, 0);
-  private double thetaDot;
+  PIDController thetaController = new PIDController(0.06, 0, 0.001);
   NetworkTable limelightTable;
 
   public Limelight(DrivetrainSubsystem drivetrain, CommandXboxController xcontroller) {
@@ -48,8 +47,8 @@ public class Limelight extends SubsystemBase {
   }
 
   public double[] turnToTarget(Boolean isRightScore) {
-    // rotController.setSetpoint(Constants.ROT_SETPOINT_REEF_ALIGNMENT);
-    // rotController.setTolerance(Constants.ROT_TOLERANCE_REEF_ALIGNMENT);
+    // thetaController.setSetpoint(Constants.ROT_SETPOINT_REEF_ALIGNMENT);
+    // thetaController.setTolerance(Constants.ROT_TOLERANCE_REEF_ALIGNMENT);
 
     // xController.setSetpoint(Constants.X_SETPOINT_REEF_ALIGNMENT);
     // xController.setTolerance(Constants.X_TOLERANCE_REEF_ALIGNMENT);
@@ -61,8 +60,7 @@ public class Limelight extends SubsystemBase {
     //   double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
     //   // Pose3d bot = LimelightHelpers.getBotPose3d_wpiBlue("limelight");
     //   Pose3d ttr = LimelightHelpers.getBotPose3d_TargetSpace("limelight");
-    //   double angle = s[4];
-    //   double[] speeds = {controller2.calculate(0, ttr.getZ()+0.3), controller2.calculate(0, -ttr.getX()-.18), controller.calculate(angle, 0)};
+    //   double[] speeds = {xController.calculate(ttr.getZ()), yController.calculate(ttr.getX()), thetaController.calculate(s[4])};
     //   return speeds;
     // }
 

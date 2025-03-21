@@ -179,9 +179,6 @@ public final class Constants {
     public static final double PIVOT_RESET_CURRENT = 4;
     public static final double PIVOT_PROCESSOR_SETPOINT = 17.29;
 
-
-    public static final double PIVOT_RESET_VOLTAGE = 20;
-
   //Shintake Constants
     public static final int INTAKE_MOTOR_LEFT = 33;
     public static final int INTAKE_MOTOR_RIGHT = 40;
@@ -200,12 +197,12 @@ public final class Constants {
     public static final int CLIMB_BUTTON = 7;
     public static final int CLIMB_UNWIND = 8;
 
+  //Limelight Constants
     public static final double ROT_SETPOINT_REEF_ALIGNMENT = 0.0;
-    public static final double ROT_TOLERANCE_REEF_ALIGNMENT = 0.0;
-    public static final double X_SETPOINT_REEF_ALIGNMENT = 0.0;
-    public static final double X_TOLERANCE_REEF_ALIGNMENT = 0.0;    
+    public static final double ROT_TOLERANCE_REEF_ALIGNMENT = 1.0;
+    public static final double X_SETPOINT_REEF_ALIGNMENT = 0.3;
+    public static final double X_TOLERANCE_REEF_ALIGNMENT = 0.01;    
     public static final double Y_SETPOINT_RIGHT_REEF_ALIGNMENT = 0.0;
     public static final double Y_SETPOINT_LEFT_REEF_ALIGNMENT = 0.0;
-    public static final double Y_TOLERANCE_REEF_ALIGNMENT = 0.0;
-
+    public static final double Y_TOLERANCE_REEF_ALIGNMENT = 0.01;
 }

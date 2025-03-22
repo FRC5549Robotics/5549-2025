@@ -186,8 +186,8 @@ public final class Constants {
     public static final double INTAKE_OUTTAKE_SPEED = 0.5;
     public static final double OUTTAKE_L1_SPEED = 0.4;
     public static final int SHINTAKE_BUTTON = 0;
-    public static final int INTAKE_TRIGGER = 3;
-    public static final int OUTTAKE_TRIGGER = 2;
+    public static final int INTAKE_TRIGGER = 2;
+    public static final int OUTTAKE_TRIGGER = 3;//RETURN TO OLD SETTING LATER
 
   //Climb Constants
     public static final int CLIMBER_MOTOR = 24;

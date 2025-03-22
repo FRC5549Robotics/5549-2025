@@ -33,11 +33,8 @@ public class Limelight extends SubsystemBase {
   PhotonCamera camera;
   DrivetrainSubsystem m_drivetrain;
   CommandXboxController xbox_controller;
-  PIDController controller = new PIDController(0.06, 0, 0.001);
-  PIDController controller2 = new PIDController(1.4, 0, 0.001);
-  PIDController xController = new PIDController(1.4, 0, 0.001);
-  PIDController yController = new PIDController(1.4, 0, 0.001);
-  PIDController thetaController = new PIDController(0.06, 0, 0.001);
+  PIDController controller = new PIDController(0.1, 0, 0.001);
+  PIDController controller2 = new PIDController(3.25, 0, 0.002);
   NetworkTable limelightTable;
 
   public Limelight(DrivetrainSubsystem drivetrain, CommandXboxController xcontroller) {
@@ -68,20 +65,23 @@ public class Limelight extends SubsystemBase {
     double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
       // Pose3d bot = LimelightHelpers.getBotPose3d_wpiBlue("limelight");
     Pose3d ttr = LimelightHelpers.getBotPose3d_TargetSpace("limelight");
-    double angle = s[4];
+    double angle = s[4] - 4.6;
     
     if(LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight").tagCount > 0){
       if (xbox_controller.getHID().getLeftBumperButton()){
         // System.out.println(controller2.calculate(0, -ttr.getX()-0.18));
         // System.out.println(controller.calculate(angle, 0));
-        double[] speeds = {controller2.calculate(0, ttr.getZ()+0.3), controller2.calculate(0, -ttr.getX()-.18), controller.calculate(angle, 0)};
+        double[] speeds = {controller2.calculate(0, ttr.getZ()+0.45), controller2.calculate(0, -ttr.getX()-.24), controller.calculate(angle, 0)};
         return speeds;
         
       }
       else if (xbox_controller.getHID().getRightBumperButton()) {
-        double[] speeds = {controller2.calculate(0, ttr.getZ()+0.3), controller2.calculate(0, -ttr.getX()+.18), controller.calculate(angle, 0)};
+        double[] speeds = {controller2.calculate(0, ttr.getZ()+0.45), controller2.calculate(0, -ttr.getX()+.02), controller.calculate(angle, 0)};
+
+
+      
         return speeds;
-      }
+     }
     }
     return null;
   }

@@ -144,11 +144,9 @@ public class RobotContainer {
     climbSetpointButton.onFalse(new InstantCommand(m_drive::switchToBrake));
     pivotIntakeButton.or(stowedButton).or(L1Button).or(L2Button).or(L3Button).or(AlgaeLowButton).or(AlgaeHighButton).or(ProcessorButton).or(climbSetpointButton).whileFalse(new SnapBack(m_pivot, m_elevator));
 
-    // AutoAlignLeft.onTrue(new InstantCommand(m_limelight::turnToTarget));
-    // AutoAlignRight.onTrue(new InstantCommand(m_limelight::turnToTarget));
     m_controller2.axisGreaterThan(Constants.INTAKE_TRIGGER, 0.7).onTrue(new InstantCommand(m_shintake::intake)).onFalse(new InstantCommand(m_shintake::off));
-    l1EjectButton.onTrue(new InstantCommand(m_shintake::shootL1)).onFalse(new InstantCommand(m_shintake::off));
     m_controller2.axisGreaterThan(Constants.OUTTAKE_TRIGGER, 0.7).onTrue(new InstantCommand(m_shintake::shoot)).onFalse(new InstantCommand(m_shintake::off));
+    l1EjectButton.onTrue(new InstantCommand(m_shintake::shootL1)).onFalse(new InstantCommand(m_shintake::off));
     //endregion
 
     //region Basic Testing Methods

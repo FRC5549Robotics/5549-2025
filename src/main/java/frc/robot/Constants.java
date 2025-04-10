@@ -157,7 +157,7 @@ public final class Constants {
     public static final double ELEVATOR_RIGHT_PROCESSOR_SETPOINT = -0.442383;
 
     public static final double ELEVATOR_RESET_CURRENT = 3;
-    // public static final int RESET_ENCODER_BUTTON = 7;
+    public static final int RESET_ENCODER_BUTTON = 7;
   
     //Pivot Constants
     public static final int PIVOT_MOTOR = 32;

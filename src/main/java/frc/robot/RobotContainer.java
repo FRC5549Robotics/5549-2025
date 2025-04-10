@@ -81,7 +81,7 @@ public class RobotContainer {
   private final Pivot m_pivot = new Pivot(m_controller2, setpointButtons, m_elevator);
   private final Shintake m_shintake = new Shintake();
   private final Climber m_climber = new Climber();
-  private final Limelight m_limelight = new Limelight(m_drive);
+  private final Limelight m_limelight = new Limelight(m_drive, m_controller); 
 
   // private final Climber m_climber = new Climber();
   //endregion

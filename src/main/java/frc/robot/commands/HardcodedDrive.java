@@ -24,16 +24,16 @@ public class HardcodedDrive extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.start();
+    timer.restart();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drivetrain.drive(new ChassisSpeeds(1, 0, 0), true);
+    m_drivetrain.drive(new ChassisSpeeds(-1, 0, 0), true);
   }
 
-  // Called once the command ends or is interrupted.
+  // Called once the command ends or is interrupted. 
   @Override
   public void end(boolean interrupted) {
     m_drivetrain.drive(new ChassisSpeeds(0, 0, 0), true);
@@ -42,6 +42,6 @@ public class HardcodedDrive extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (timer.get()>1.2);
+    return (timer.get()>2);
   }
 }

@@ -14,10 +14,18 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-// import org.littletonrobotics.urcl.URCL;
+import org.opencv.core.Mat;
 
+// import org.littletonrobotics.urcl.URCL;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.*;
 import com.fasterxml.jackson.annotation.JacksonInject.Value;
 
+
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 
@@ -40,7 +48,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
   //  */
 public class Robot extends LoggedRobot {
   private final RobotContainer m_robotContainer;
+  CameraServer cameraServer;
+  UsbCamera cam;
   Command m_autonomousCommand;
+  NetworkTableEntry cameraNet;
   public Robot() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
@@ -102,7 +113,15 @@ public class Robot extends LoggedRobot {
 
     // Start AdvantageKit logger
     // Logger.start();  // Start logging! No more data receivers, replay sources, or metadata values may be added.
-  
+    cam = CameraServer.startAutomaticCapture(0);
+
+    // CvSink sink  = CameraServer.getVideo();
+    // Mat mat = sink.getDirectMat();
+    // mat.
+    
+
+
+    cameraNet = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
     m_robotContainer = new RobotContainer();
  
   }

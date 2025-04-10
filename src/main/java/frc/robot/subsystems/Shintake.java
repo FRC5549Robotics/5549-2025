@@ -47,13 +47,17 @@ public class Shintake extends SubsystemBase{
     }
 
     public void shoot() {
-        IntakeMotorLeft.set(Constants.INTAKE_OUTTAKE_SPEED);
-        IntakeMotorRight.set(-Constants.INTAKE_OUTTAKE_SPEED);
-      }
+      IntakeMotorLeft.set(-Constants.INTAKE_OUTTAKE_SPEED);
+      IntakeMotorRight.set(Constants.INTAKE_OUTTAKE_SPEED);
+    }
+    public void shootL1(){
+      IntakeMotorLeft.set(-Constants.OUTTAKE_L1_SPEED);
+      IntakeMotorRight.set(Constants.OUTTAKE_L1_SPEED*0.4);
+    }
     public void intake() {
-        IntakeMotorLeft.set(-Constants.INTAKE_OUTTAKE_SPEED);
-        IntakeMotorRight.set(Constants.INTAKE_OUTTAKE_SPEED);
-      }
+      IntakeMotorLeft.set(Constants.INTAKE_OUTTAKE_SPEED);
+      IntakeMotorRight.set(-Constants.INTAKE_OUTTAKE_SPEED);
+    }
     public void off(){
         IntakeMotorLeft.set(0);
         IntakeMotorRight.set(0);

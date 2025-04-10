@@ -85,7 +85,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   //target pose and controller
   Pose2d m_targetPose;
-  PIDController m_thetaController = new PIDController(0.1, 0.0, 0.0);
+  PIDController m_thetaController = new PIDController(0.1, 0.0, 0.001);
   PIDController m_translationController = new PIDController(0.1,0,0);
 
   ChassisSpeeds speeds; 
@@ -506,6 +506,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return mutableVals;
   }
 
+  public void switchToCoast(){
+    m_frontLeft.switchToCoast();
+    m_frontRight.switchToCoast();
+    m_rearLeft.switchToCoast();
+    m_rearRight.switchToCoast();
+  }
+
+  public void switchToBrake(){
+    m_frontLeft.switchToBrake();
+    m_frontRight.switchToBrake();
+    m_rearLeft.switchToBrake();
+    m_rearRight.switchToBrake();
+  }
   //Gourmet code
   public double[] processControllerInputs(double[] ControllerSpeeds){
     ArrayList<Double> controllerSpeeds= new ArrayList<>();

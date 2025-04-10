@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.List;
+
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 
@@ -16,9 +18,14 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
+import frc.robot.LimelightHelpers.RawFiducial;
 
 
 public class Limelight extends SubsystemBase {
@@ -26,60 +33,71 @@ public class Limelight extends SubsystemBase {
   PhotonCamera camera;
   DrivetrainSubsystem m_drivetrain;
   CommandXboxController xbox_controller;
-  PIDController controller = new PIDController(0, 0, 0);
+  PIDController controller = new PIDController(0.1, 0, 0.001);
+  PIDController controller2 = new PIDController(3.25, 0, 0.002);
+  NetworkTable limelightTable;
 
   public Limelight(DrivetrainSubsystem drivetrain, CommandXboxController xcontroller) {
-    camera = new PhotonCamera("photonvision");
     m_drivetrain = drivetrain;
     xbox_controller = xcontroller;
-
+    limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
   }
 
-  public void turnToTarget() {
-    // var results = camera.getAllUnreadResults();
-    // var result = results.get(results.size() - 1);
-    // AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
-    
-    // var result = camera.getLatestResult();
-    // if (result.hasTargets()) {
-    //   // At least one AprilTag was seen by the camera
-    //   for (var target : result.getTargets()) {
-    //     //Alt approach: Gets robot and april tag 3D poses to calculate angle
-    //     Transform3d robotToCam = new Transform3d(new Translation3d(0, 0.0, 0), new Rotation3d(0,0,0));
-    //     Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(), aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(), robotToCam);
-    //     double thetaR = robotPose.getRotation().getZ();
-    //     Pose3d tagPose = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get();
-    //     double thetaA = tagPose.getRotation().getZ();
-    //     double thetaT = 0;
-    //     if (thetaA < 0) {
-    //       thetaT = Math.PI+thetaA;
-    //     }
-    //     if (thetaA == 0) {
-    //       thetaT = (Math.PI-thetaA);
-    //     }
-    //     else {
-    //       thetaT = thetaA-Math.PI;
-    //     }
+  public double[] turnToTarget(Boolean isRightScore) {
+    // thetaController.setSetpoint(Constants.ROT_SETPOINT_REEF_ALIGNMENT);
+    // thetaController.setTolerance(Constants.ROT_TOLERANCE_REEF_ALIGNMENT);
 
-    //     double[] controllerVals = {xbox_controller.getLeftY(), xbox_controller.getLeftX()};
+    // xController.setSetpoint(Constants.X_SETPOINT_REEF_ALIGNMENT);
+    // xController.setTolerance(Constants.X_TOLERANCE_REEF_ALIGNMENT);
 
+    // yController.setSetpoint(isRightScore ? Constants.Y_SETPOINT_RIGHT_REEF_ALIGNMENT : Constants.Y_SETPOINT_LEFT_REEF_ALIGNMENT);
+    // yController.setTolerance(Constants.Y_TOLERANCE_REEF_ALIGNMENT);
 
-    //     m_drivetrian.generateSpeeds()
-    //     m_drivetrain.drive(new ChassisSpeeds(0, 0, controller.calculate(thetaR, thetaT)), false);
-        
-
-    //     // double distanceToTarget = PhotonUtils.getDistanceToPose(robotPose, targetPose);
-    //     // Translation2d trans = PhotonUtils.estimateCameraToTargetTranslation(0, null);
-    //     var targetYaw = target.getYaw();
-    //     m_drivetrain.drive(new ChassisSpeeds(0, 0, controller.calculate(targetYaw)), false);
-    //   }
+    // if (LimelightHelpers.getTV("limelight")) {
+    //   double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
+    //   // Pose3d bot = LimelightHelpers.getBotPose3d_wpiBlue("limelight");
+    //   Pose3d ttr = LimelightHelpers.getBotPose3d_TargetSpace("limelight");
+    //   double[] speeds = {xController.calculate(ttr.getZ()), yController.calculate(ttr.getX()), thetaController.calculate(s[4])};
+    //   return speeds;
     // }
 
-  // public void ttt2() {}
-  // }
+
+    double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
+      // Pose3d bot = LimelightHelpers.getBotPose3d_wpiBlue("limelight");
+    Pose3d ttr = LimelightHelpers.getBotPose3d_TargetSpace("limelight");
+    double angle = s[4] - 4.6;
+    
+    if(LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight").tagCount > 0){
+      if (xbox_controller.getHID().getLeftBumperButton()){
+        // System.out.println(controller2.calculate(0, -ttr.getX()-0.18));
+        // System.out.println(controller.calculate(angle, 0));
+        double[] speeds = {controller2.calculate(0, ttr.getZ()+0.45), controller2.calculate(0, -ttr.getX()-.24), controller.calculate(angle, 0)};
+        return speeds;
+        
+      }
+      else if (xbox_controller.getHID().getRightBumperButton()) {
+        double[] speeds = {controller2.calculate(0, ttr.getZ()+0.45), controller2.calculate(0, -ttr.getX()+.02), controller.calculate(angle, 0)};
+
+
+      
+        return speeds;
+     }
+    }
+    return null;
   }
+  
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-  }
-}
+    // double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
+    // System.out.println(s);
+    // var s = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose_targetspace").getDoubleArray(new double[6]);
+    // System.out.println(s);
+
+    // for (int i = 0; i<s.length; i++) {
+    //   System.out.println(s[i]);
+    // }
+    // System.out.println(s[4]);
+  }}
+

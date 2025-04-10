@@ -18,12 +18,12 @@ public class SetpointsAuton extends Command {
   Pivot.PivotTarget target;
   double pivotSetpoint, elevatorLeftSetpoint, elevatorRightSetpoint;
   boolean end;
-  Elevator elevator;
+  Elevator m_elevator;
 
   public SetpointsAuton(Pivot pivot, Pivot.PivotTarget Target, Elevator Elevator) {
     m_pivot = pivot;
     target = Target;
-    elevator = Elevator;
+    m_elevator = Elevator;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -76,7 +76,7 @@ public class SetpointsAuton extends Command {
   @Override
   public void execute() {
     m_pivot.PivotToSetpoint(pivotSetpoint);
-    elevator.ElevateToSetpoint(elevatorLeftSetpoint, elevatorRightSetpoint);
+    m_elevator.ElevateToSetpoint(elevatorLeftSetpoint, elevatorRightSetpoint);
 
   }
 
@@ -84,13 +84,14 @@ public class SetpointsAuton extends Command {
   @Override
   public void end(boolean interrupted) {
     m_pivot.off(); 
+    m_elevator.off();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(pivotSetpoint-m_pivot.getPivotPosition()) <= 0.05 
-            && Math.abs(elevatorLeftSetpoint-elevator.getLeftElevatorPosition()) <= 2 
-            && Math.abs(elevatorRightSetpoint-elevator.getRightElevatorPosition()) <= 2);
+    return (Math.abs(pivotSetpoint-m_pivot.getPivotPosition()) <= 2 
+            && Math.abs(elevatorLeftSetpoint-m_elevator.getLeftElevatorPosition()) <= 3 
+            && Math.abs(elevatorRightSetpoint-m_elevator.getRightElevatorPosition()) <= 3);
   }
 }

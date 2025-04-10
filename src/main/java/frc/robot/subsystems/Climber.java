@@ -30,10 +30,17 @@ public class Climber extends SubsystemBase {
   /** Creates a new Pivot. */
   public Climber() {
     ClimberMotor = new SparkMax(Constants.CLIMBER_MOTOR, MotorType.kBrushless);
+    SparkMaxConfig Climberconfig = new SparkMaxConfig();
+    Climberconfig.idleMode(IdleMode.kBrake);
+    ClimberMotor.configure(Climberconfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+
   }
 
   public void climb(){
-    ClimberMotor.set(0.15);
+    ClimberMotor.set(1);
+  }
+  public void unwind(){
+    ClimberMotor.set(-0.6);
   }
 
   public void off(){

@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import java.io.Console;
 
+import org.opencv.core.Mat;
+
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -60,8 +62,7 @@ public class SwerveModule extends SubsystemBase {
         m_driveConfig = new SparkMaxConfig();
         m_turningConfig = new SparkMaxConfig();
         m_driveConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40, 40);
-        m_turningConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40, 40);
-        
+        m_turningConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40, 40);           
         m_driveConfig.encoder.velocityConversionFactor(Constants.kDriveConversionFactor / 60.0);
         m_driveConfig.encoder.positionConversionFactor(Constants.kDriveConversionFactor);
         m_turningConfig.encoder.positionConversionFactor(360.0 / Constants.kTurnPositionConversionFactor);
@@ -163,14 +164,17 @@ public class SwerveModule extends SubsystemBase {
 
         adjustedAngle = Rotation2d.fromDegrees(delta + curAngle.getDegrees());
 
-        m_turningController.getClosedLoopController().setReference(
-            adjustedAngle.getDegrees(),
-            ControlType.kPosition
-        );        
+        if((driveOutput == 0 && Math.abs(getTurnEncoder().getPosition() - adjustedAngle.getDegrees()) > 2) || Math.abs(driveOutput) > 0){
+            m_turningController.getClosedLoopController().setReference(
+                adjustedAngle.getDegrees(),
+                ControlType.kPosition
+            );            
+        }
+        else{
+            m_turningController.set(0);
+        }
 
         SmartDashboard.putNumber("Commanded Velocity", driveOutput);
-
-        
         SmartDashboard.putNumber("Module Speeds", m_driveEncoder.getVelocity());
 
         m_driveController.getClosedLoopController().setReference(driveOutput/Constants.kMaxSpeedMetersPerSecond, ControlType.kDutyCycle, ClosedLoopSlot.kSlot0, 0.0);
@@ -218,6 +222,16 @@ public class SwerveModule extends SubsystemBase {
 
     public void syncTurningEncoders() {
         m_turningEncoder.setPosition(m_turningCANCoder.getAbsolutePosition().getValueAsDouble()*360);
+    }
+
+    public void switchToCoast() {
+        m_driveConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(40, 40);
+        m_turningConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(40, 40);
+    }
+
+    public void switchToBrake() {
+        m_driveConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40, 40);
+        m_turningConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40, 40);
     }
 
     /** Zeros all the SwerveModule encoders. */

@@ -16,10 +16,12 @@ public class Climb extends Command {
   /** Creates a new ElevateAnalog. */
   Climber m_climber;
   CommandXboxController m_controller;
-  public Climb(Climber climber, CommandXboxController controller) {
+  Pivot m_pivot;
+  public Climb(Climber climber, Pivot pivot, CommandXboxController controller) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_climber = climber;
     m_controller = controller;
+    m_pivot  = pivot;
   }
 
   // Called when the command is initially scheduled.
@@ -30,6 +32,8 @@ public class Climb extends Command {
   @Override
   public void execute() {
     m_climber.climb();
+    m_pivot.PivotToSetpoint(Constants.PIVOT_PROCESSOR_SETPOINT);
+    
     // m_climber.climb(m_controller.getLeftY()*Constants.CLIMBER_SCALING_FACTOR);
   }
 

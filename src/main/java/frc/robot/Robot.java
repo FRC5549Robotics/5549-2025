@@ -15,6 +15,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.opencv.core.Mat;
+import org.littletonrobotics.urcl.*;
 
 // import org.littletonrobotics.urcl.URCL;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -30,101 +31,112 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.Shintake;
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
  * the TimedRobot documentation. If you change the name of this class or the package after creating
  * this project, you must also update the Main.java file in the project.
  */
-// public class Robot extends TimedRobot {
-//   private Command m_autonomousCommand;
-
-//   private final RobotContainer m_robotContainer;
-/**
-  //  * This function is run when the robot is first started up and should be used for any
-  //  * initialization code.
-  //  */
-public class Robot extends LoggedRobot {
+public class Robot extends TimedRobot {
   private final RobotContainer m_robotContainer;
   CameraServer cameraServer;
   UsbCamera cam;
   Command m_autonomousCommand;
   NetworkTableEntry cameraNet;
   public Robot() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
+  
+/**
+//  * This function is run when the robot is first started up and should be used for any
+//  * initialization code.
+//  */
+// public class Robot extends LoggedRobot {
+//   private final RobotContainer m_robotContainer;
+//   CameraServer cameraServer;
+//   UsbCamera cam;
+//   Command m_autonomousCommand;
+//   NetworkTableEntry cameraNet;
+//   private Spark motor;
+//   public Robot() {
+//      // 0 is the RIO PWM port this is connected to
+    
+    
 
-    // if (isReal()) {
-    //   Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
-    //   Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-    //   new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
-    // } 
-    // else {
-    //   setUseTiming(false); // Run as fast as possible
-    //   String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-    //   Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-    //   Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-    // }
-    // Logger.start();
+//     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+//     // autonomous chooser on the dashboard.
 
-    // Logger.recordMetadata("ProjectName",  BuildConstants.MAVEN_NAME);
-    // Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-    // Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-    // Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-    // Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
-    // switch (BuildConstants.DIRTY) {
-    //   case 0:
-    //     Logger.recordMetadata("GitDirty", "All changes committed");
-    //     break;
-    //   case 1:
-    //     Logger.recordMetadata("GitDirty", "Uncomitted changes");
-    //     break;
-    //   default:
-    //     Logger.recordMetadata("GitDirty", "Unknown");
-    //     break;
-    // }
+//     if (isReal()) {
+//       Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
+//       Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+//       new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+//     } 
+//     else {
+//       setUseTiming(false); // Run as fast as possible
+//       String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+//       Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+//       Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+//     }
+//     Logger.start();
 
-    // // Set up data receivers & replay source
-    // switch (Constants.currentMode) {
-    //   case REAL:
-    //     // Running on a real robot, log to a USB stick ("/U/logs")
-    //     Logger.addDataReceiver(new WPILOGWriter());
-    //     Logger.addDataReceiver(new NT4Publisher());
-    //     break;
+//     Logger.recordMetadata("ProjectName",  BuildConstants.MAVEN_NAME);
+//     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+//     Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+//     Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+//     Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+//     switch (BuildConstants.DIRTY) {
+//       case 0:
+//         Logger.recordMetadata("GitDirty", "All changes committed");
+//         break;
+//       case 1:
+//         Logger.recordMetadata("GitDirty", "Uncomitted changes");
+//         break;
+//       default:
+//         Logger.recordMetadata("GitDirty", "Unknown");
+//         break;
+//     }
 
-    //   case SIM:
-    //     // Running a physics simulator, log to NT
-    //     Logger.addDataReceiver(new NT4Publisher());
-    //     break;
+//     // Set up data receivers & replay source
+//     switch (Constants.currentMode) {
+//       case REAL:
+//         // Running on a real robot, log to a USB stick ("/U/logs")
+//         Logger.addDataReceiver(new WPILOGWriter());
+//         Logger.addDataReceiver(new NT4Publisher());
+//         break;
 
-    //   case REPLAY:
-    //     // Replaying a log, set up replay source
-    //     setUseTiming(false); // Run as fast as possible
-    //     String logPath = LogFileUtil.findReplayLog();
-    //     Logger.setReplaySource(new WPILOGReader(logPath));
-    //     Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
-    //     break;
-    // }
+//       case SIM:
+//         // Running a physics simulator, log to NT
+//         Logger.addDataReceiver(new NT4Publisher());
+//         break;
 
-    //Initialize URCL
-    // Logger.registerURCL(URCL.startExternal());
+//       case REPLAY:
+//         // Replaying a log, set up replay source
+//         setUseTiming(false); // Run as fast as possible
+//         String logPath = LogFileUtil.findReplayLog();
+//         Logger.setReplaySource(new WPILOGReader(logPath));
+//         Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+//         break;
+//     }
 
-    // Start AdvantageKit logger
-    // Logger.start();  // Start logging! No more data receivers, replay sources, or metadata values may be added.
-    cam = CameraServer.startAutomaticCapture(0);
+//     // Initialize URCL
+//     Logger.registerURCL(URCL.startExternal());
 
-    // CvSink sink  = CameraServer.getVideo();
-    // Mat mat = sink.getDirectMat();
-    // mat.
+//     // Start AdvantageKit logger
+//     Logger.start();  // Start logging! No more data receivers, replay sources, or metadata values may be added.
+//     cam = CameraServer.startAutomaticCapture(0);
+//     motor = new Spark(0); 
+//     // CvSink sink  = CameraServer.getVideo();
+//     // Mat mat = sink.getDirectMat();
+//     // mat.
     
 
 
     cameraNet = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
     m_robotContainer = new RobotContainer();
  
-  }
+//   }
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -133,6 +145,7 @@ public class Robot extends LoggedRobot {
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
    */
+  }
   
   @Override
   public void robotPeriodic() {
@@ -178,7 +191,9 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    // motor.set(.5);
+  }
 
   @Override
   public void testInit() {

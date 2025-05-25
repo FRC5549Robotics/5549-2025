@@ -34,21 +34,23 @@ public class Shintake extends SubsystemBase{
 
         IntakeMotorLeft.configure(IntakeLeftConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
         IntakeMotorRight.configure(IntakeRightConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-
     }
-    public void intake(double speed) {//make dependent on trigger
-        IntakeMotorLeft.set(-speed);
-        IntakeMotorRight.set(-speed);   
-    }
+    // public void intake(double speed) {//make dependent on trigger
+    //     IntakeMotorLeft.set(-speed);
+    //     IntakeMotorRight.set(-speed);   
+    //     System.out.println("intake doesn't fucking work");
+    // }
       
-    public void alt_intake() {//make dependent on trigger
-        IntakeMotorLeft.set(-0.7);
-        IntakeMotorRight.set(-0.7);
-    }
+    // public void alt_intake() {//make dependent on trigger
+    //     IntakeMotorLeft.set(-0.7);
+    //     IntakeMotorRight.set(-0.7);
+    // }
 
     public void shoot() {
       IntakeMotorLeft.set(-Constants.INTAKE_OUTTAKE_SPEED);
       IntakeMotorRight.set(Constants.INTAKE_OUTTAKE_SPEED);
+      System.out.println("shoot pls work");
+      System.out.println(Constants.INTAKE_OUTTAKE_SPEED);
     }
     public void shootL1(){
       IntakeMotorLeft.set(-Constants.OUTTAKE_L1_SPEED);
@@ -57,10 +59,14 @@ public class Shintake extends SubsystemBase{
     public void intake() {
       IntakeMotorLeft.set(Constants.INTAKE_OUTTAKE_SPEED);
       IntakeMotorRight.set(-Constants.INTAKE_OUTTAKE_SPEED);
+      System.out.println("intake doesn't work");
+      System.out.println(Constants.INTAKE_OUTTAKE_SPEED);
+
     }
     public void off(){
         IntakeMotorLeft.set(0);
         IntakeMotorRight.set(0);
+        System.out.println("off");
       }
 }
     

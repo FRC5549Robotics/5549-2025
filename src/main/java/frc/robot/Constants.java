@@ -109,9 +109,9 @@ public final class Constants {
   public static final double kTurningD = 0.0005;
   public static final double kAcceleration = 4;
 
-  public static final int RESET_NAVX_BUTTON = 4;
+  public static final int RESET_NAVX_BUTTON = 8;
 
-  public static final Mode simMode = Mode.REPLAY;
+  public static final Mode simMode = Mode.REAL;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
 

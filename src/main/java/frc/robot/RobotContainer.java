@@ -47,6 +47,7 @@ import frc.robot.commands.SnapBack;
 import frc.robot.commands.AutonCommands.HardcodedAuton;
 import frc.robot.subsystems.Pivot.PivotTarget;
 import frc.robot.subsystems.Elevator;
+import frc.robot.commands.Dance;
 
 
 /**
@@ -78,6 +79,12 @@ public class RobotContainer {
   JoystickButton AutoAlignRight = new JoystickButton(m_controller.getHID(), 2);
   Trigger[] setpointButtons = {stowedButton, pivotIntakeButton, L1Button, L2Button, L3Button, AlgaeHighButton, AlgaeLowButton};
 
+  //DANCE BUTTONS
+  JoystickButton slideRight = new JoystickButton(m_controller.getHID(), 2);
+  JoystickButton slideLeft = new JoystickButton(m_controller.getHID(), 3);
+  JoystickButton slideForward = new JoystickButton(m_controller.getHID(), 4);
+  JoystickButton slideBackward = new JoystickButton(m_controller.getHID(), 1);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   //region Subsystems
   private final AHRS m_ahrs = new AHRS(NavXComType.kMXP_SPI);
@@ -85,7 +92,7 @@ public class RobotContainer {
   private final Elevator m_elevator = new Elevator(m_controller2, setpointButtons);
   private final Pivot m_pivot = new Pivot(m_controller2, setpointButtons);
   private final Shintake m_shintake = new Shintake();
-  private final Climber m_climber = new Climber();
+  // private final Climber m_climber = new Climber();
   private final Limelight m_limelight = new Limelight(m_drive, m_controller); 
 
   // private final Climber m_climber = new Climber();
@@ -139,16 +146,18 @@ public class RobotContainer {
     AlgaeLowButton.whileTrue(new Setpoints(m_pivot, PivotTarget.AlgaeLow, m_elevator));
     AlgaeHighButton.whileTrue(new Setpoints(m_pivot, PivotTarget.AlgaeHigh, m_elevator));
     ProcessorButton.whileTrue(new Setpoints(m_pivot, PivotTarget.Processor, m_elevator));
-    climbSetpointButton.whileTrue(new Setpoints(m_pivot, PivotTarget.Climb, m_elevator));
-    climbSetpointButton.onTrue(new InstantCommand(m_drive::switchToCoast));
-    climbSetpointButton.onFalse(new InstantCommand(m_drive::switchToBrake));
+    // climbSetpointButton.whileTrue(new Setpoints(m_pivot, PivotTarget.Climb, m_elevator));
+    // climbSetpointButton.onTrue(new InstantCommand(m_drive::switchToCoast));
+    // climbSetpointButton.onFalse(new InstantCommand(m_drive::switchToBrake));
     pivotIntakeButton.or(stowedButton).or(L1Button).or(L2Button).or(L3Button).or(AlgaeLowButton).or(AlgaeHighButton).or(ProcessorButton).or(climbSetpointButton).whileFalse(new SnapBack(m_pivot, m_elevator));
 
-    m_controller2.axisGreaterThan(Constants.INTAKE_TRIGGER, 0.7).onTrue(new InstantCommand(m_shintake::intake)).onFalse(new InstantCommand(m_shintake::off));
+    m_controller2.axisGreaterThan(Constants.INTAKE_TRIGGER, 0.7).onTrue( new InstantCommand(m_shintake::intake)).onFalse(new InstantCommand(m_shintake::off));
     m_controller2.axisGreaterThan(Constants.OUTTAKE_TRIGGER, 0.7).onTrue(new InstantCommand(m_shintake::shoot)).onFalse(new InstantCommand(m_shintake::off));
     l1EjectButton.onTrue(new InstantCommand(m_shintake::shootL1)).onFalse(new InstantCommand(m_shintake::off));
     //endregion
 
+    //DANCE COMMANDS
+    slideForward.whileTrue(new Dance(m_drive));
     //region Basic Testing Methods
     m_controller2.axisGreaterThan(Constants.PIVOT_JOYSTICK, Constants.PIVOT_DEADBAND).or(m_controller2.axisLessThan(Constants.PIVOT_JOYSTICK, -Constants.PIVOT_DEADBAND)).onTrue(new PivotAnalog(m_pivot, m_controller2)).onFalse(new InstantCommand(m_pivot::off));
     m_controller2.axisGreaterThan(Constants.ELEVATOR_JOYSTICK, Constants.ELEVATOR_DEADBAND).or(m_controller2.axisLessThan(Constants.ELEVATOR_JOYSTICK, -Constants.ELEVATOR_DEADBAND)).onTrue(new ElevateAnalog(m_elevator, m_controller2)).onFalse(new InstantCommand(m_elevator::off));
@@ -156,9 +165,9 @@ public class RobotContainer {
 
 
     //Set Pivot and Elevator Position to Zero
-    climbButton.onTrue(new InstantCommand(m_climber::climb)).onFalse(new InstantCommand(m_climber::off));
+    // climbButton.onTrue(new InstantCommand(m_climber::climb)).onFalse(new InstantCommand(m_climber::off));
     // climbButton.onTrue(new Climb(m_climber, m_pivot, m_controller2)).onFalse(new InstantCommand(m_climber::off));
-    climbUnwind.onTrue(new InstantCommand(m_climber::unwind)).onFalse(new InstantCommand(m_climber::off));
+    // climbUnwind.onTrue(new InstantCommand(m_climber::unwind)).onFalse(new InstantCommand(m_climber::off));
     
     // m_controller2.axisGreaterThan(Constants.CLIMBER_JOYSTICK, Constants.CLIMBER_DEADBAND).or(m_controller2.axisLessThan(Constants.CLIMBER_JOYSTICK, -Constants.CLIMBER_DEADBAND)).onTrue(new Climb(m_climber, m_controller2)).onFalse(new InstantCommand(m_climber::off));
     //endregion  

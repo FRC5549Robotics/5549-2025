@@ -37,6 +37,10 @@ import frc.robot.Constants;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class DrivetrainSubsystem extends SubsystemBase {
+  
+  public static enum direction{
+    
+  }
 
   // Robot swerve modules
   private final SwerveModule m_frontLeft =
@@ -555,5 +559,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
       }
     }
     return adjustedSpeeds.stream().mapToDouble(Double::doubleValue).toArray();
+  }
+
+  public void off() {
+    drive(new ChassisSpeeds(0, 0, 0), false);
   }
 }

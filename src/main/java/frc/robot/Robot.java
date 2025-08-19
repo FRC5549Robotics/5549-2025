@@ -36,6 +36,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Shintake;
+
+//WPI Logging
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
+
+
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
  * the TimedRobot documentation. If you change the name of this class or the package after creating
@@ -48,6 +54,8 @@ public class Robot extends TimedRobot {
   Command m_autonomousCommand;
   NetworkTableEntry cameraNet;
   public Robot() {
+    
+
   
 /**
 //  * This function is run when the robot is first started up and should be used for any
@@ -166,17 +174,21 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+    System.out.println("Autonomous period started");
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
+      System.out.println("Autonomous command initialized");
     }
+
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+  }
 
   @Override
   public void teleopInit() {
@@ -187,6 +199,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog(), false);
+
   }
 
   /** This function is called periodically during operator control. */

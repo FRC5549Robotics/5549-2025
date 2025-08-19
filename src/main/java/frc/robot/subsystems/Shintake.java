@@ -28,8 +28,8 @@ public class Shintake extends SubsystemBase{
         IntakeLeftConfig.idleMode(IdleMode.kCoast);
         IntakeRightConfig.idleMode(IdleMode.kCoast);
 
-        IntakeRightConfig.smartCurrentLimit(40);
-        IntakeLeftConfig.smartCurrentLimit(40);
+        IntakeRightConfig.smartCurrentLimit(20);// changed to 20 from 40 -Jordan
+        IntakeLeftConfig.smartCurrentLimit(20); // this too
 
 
         IntakeMotorLeft.configure(IntakeLeftConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);

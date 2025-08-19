@@ -20,7 +20,7 @@ public final class Constants {
   public static final int DRIVE_CONTROLLER = 0;
   public static final int OPERATOR_CONTROLLER = 1;
 
-  public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 4; 
+  public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 13; 
   public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 5;
   public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 10; 
   public static final double FRONT_LEFT_MAGNET_OFFSET = -0.002197; 
@@ -183,11 +183,12 @@ public final class Constants {
     public static final int INTAKE_MOTOR_LEFT = 33;
     public static final int INTAKE_MOTOR_RIGHT = 40;
     public static final int SHOOTER_INTAKE_BUTTON = 6;
-    public static final double INTAKE_OUTTAKE_SPEED = 0.5;
+    public static final double INTAKE_OUTTAKE_SPEED = 1;
     public static final double OUTTAKE_L1_SPEED = 0.4;
     public static final int SHINTAKE_BUTTON = 0;
     public static final int INTAKE_TRIGGER = 2;
     public static final int OUTTAKE_TRIGGER = 3;//RETURN TO OLD SETTING LATER
+
 
   //Climb Constants
     public static final int CLIMBER_MOTOR = 24;

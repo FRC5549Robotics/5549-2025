@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.Optional;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
@@ -40,6 +41,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shintake;
+import frc.robot.subsystems.DrivetrainSubsystem.direction;
 // import frc.robot.subsystems.Elevator.PivotTarget;
 import frc.robot.commands.PivotAnalog;
 import frc.robot.commands.Setpoints;
@@ -157,7 +159,14 @@ public class RobotContainer {
     //endregion
 
     //DANCE COMMANDS
-    slideForward.whileTrue(new Dance(m_drive));
+    slideForward.whileTrue(new Dance(m_drive, direction.forward));
+    slideBackward.whileTrue(new Dance(m_drive, direction.backward));
+    slideLeft.whileTrue(new Dance(m_drive, direction.left));
+    slideRight.whileTrue(new Dance(m_drive, direction.right));
+
+
+
+
     //region Basic Testing Methods
     m_controller2.axisGreaterThan(Constants.PIVOT_JOYSTICK, Constants.PIVOT_DEADBAND).or(m_controller2.axisLessThan(Constants.PIVOT_JOYSTICK, -Constants.PIVOT_DEADBAND)).onTrue(new PivotAnalog(m_pivot, m_controller2)).onFalse(new InstantCommand(m_pivot::off));
     m_controller2.axisGreaterThan(Constants.ELEVATOR_JOYSTICK, Constants.ELEVATOR_DEADBAND).or(m_controller2.axisLessThan(Constants.ELEVATOR_JOYSTICK, -Constants.ELEVATOR_DEADBAND)).onTrue(new ElevateAnalog(m_elevator, m_controller2)).onFalse(new InstantCommand(m_elevator::off));
@@ -173,7 +182,7 @@ public class RobotContainer {
     //endregion  
   }
 
-  /**
+  /** 
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
@@ -182,6 +191,7 @@ public class RobotContainer {
     // An example command will be run in autonomous
     // return Commands.sequence(new WaitCommand(0.25), resetOdometry, myTrajectory);
     
-    return new HardcodedAuton(m_drive, m_pivot, m_elevator, m_shintake);
+    // return new HardcodedAuton(m_drive, m_pivot, m_elevator, m_shintake);
+    return new PathPlannerAuto("plswork");
   }
 }

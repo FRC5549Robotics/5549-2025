@@ -6,12 +6,13 @@ package frc.robot;
 
 import java.util.Optional;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
-import choreo.Choreo;
-import choreo.auto.AutoFactory;
+// import choreo.Choreo;
+// import choreo.auto.AutoFactory;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -95,29 +97,35 @@ public class RobotContainer {
   private final Pivot m_pivot = new Pivot(m_controller2, setpointButtons);
   private final Shintake m_shintake = new Shintake();
   // private final Climber m_climber = new Climber();
-  private final Limelight m_limelight = new Limelight(m_drive, m_controller); 
+  private final Limelight m_limelight = new Limelight(m_drive, m_controller);
 
   // private final Climber m_climber = new Climber();
   //endregion
 
-  //region Trajectories
-  AutoFactory autoFactory = new AutoFactory(
-    m_drive::getPose, // A function that returns the current robot pose
-    m_drive::resetOdometry, // A function that resets the current robot pose to the provided Pose2d
-    m_drive::followTrajectory, // The drive subsystem trajectory follower 
-    true, // If alliance flipping should be enabled 
-    m_drive);
-  
-  Optional<Trajectory<SwerveSample>> testT1 = Choreo.loadTrajectory("Test1");
-  Optional<Trajectory<SwerveSample>> testT2 = Choreo.loadTrajectory("Test2");
+  //AUTOCHOOSER SET UP
+  private final SendableChooser<Command> autoChooser;
 
-  Command myTrajectory = autoFactory.trajectoryCmd("Test1");
-  Command resetOdometry = autoFactory.resetOdometry("Test1");
+
+  //region Trajectories
+  // AutoFactory autoFactory = new AutoFactory(
+  //   m_drive::getPose, // A function that returns the current robot pose
+  //   m_drive::resetOdometry, // A function that resets the current robot pose to the provided Pose2d
+  //   m_drive::followTrajectory, // The drive subsystem trajectory follower 
+  //   true, // If alliance flipping should be enabled 
+  //   m_drive);
+  
+  // Optional<Trajectory<SwerveSample>> testT1 = Choreo.loadTrajectory("Test1");
+  // Optional<Trajectory<SwerveSample>> testT2 = Choreo.loadTrajectory("Test2");
+
+  // Command myTrajectory = autoFactory.trajectoryCmd("Test1");
+  // Command resetOdometry = autoFactory.resetOdometry("Test1");
   //endregion
 
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -192,6 +200,7 @@ public class RobotContainer {
     // return Commands.sequence(new WaitCommand(0.25), resetOdometry, myTrajectory);
     
     // return new HardcodedAuton(m_drive, m_pivot, m_elevator, m_shintake);
-    return new PathPlannerAuto("plswork");
+    return autoChooser.getSelected();
+
   }
 }

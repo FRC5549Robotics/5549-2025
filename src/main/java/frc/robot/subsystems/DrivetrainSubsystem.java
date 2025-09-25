@@ -147,10 +147,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
             this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+                    new PIDConstants(0.05, 0.0, 2.0), // Translation PID constants
+                    new PIDConstants(1.0, 0.0, 0.0) // Rotation PID constants
             ),
-            config, // The robot configuration
+            config, // The robot configuration                           cs
             () -> {
               // Boolean supplier that controls when the path will be mirrored for the red alliance
               // This will flip the path being followed to the red side of the field.
@@ -423,20 +423,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
   }
 
-  // /** Zeroes the heading of the robot. */
-  // public void zeroHeading() {
-  //   m_ahrs.zeroYaw();
-  //   offset = 0;
-  //   m_targetPose = new Pose2d(new Translation2d(), new Rotation2d());
-  // }
+  /** Zeroes the heading of the robot. */
+  public void zeroHeading() {
+    m_ahrs.zeroYaw();
+    // offset = 0;
+    m_targetPose = new Pose2d(new Translation2d(), new Rotation2d());
+  }
 
-  // public void resetOdometry(double heading, Pose2d pose) {
-  //   zeroHeading();
-  //   offset = heading;
-  //   m_odometry.resetPosition(Rotation2d.fromDegrees(heading),
-  //   getModulePositions(),
-  //   pose);
-  // }
+  public void resetOdometry(double heading, Pose2d pose) {
+    zeroHeading();
+    // offset = heading;
+    m_odometry.resetPosition(Rotation2d.fromDegrees(heading),
+    getModulePositions(),
+    pose);
+  }
   public void zeroGyroscope(){
     m_ahrs.zeroYaw();
   }
@@ -555,6 +555,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     return mutableVals;
   }
+
+  //SET INVERTED THE STUPID FREAKING BACK LEFT DRIVE
 
   public void switchToCoast(){
     m_frontLeft.switchToCoast();

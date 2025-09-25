@@ -61,7 +61,7 @@ public class SwerveModule extends SubsystemBase {
         m_turningController = new SparkMax(turningMotorChannel, MotorType.kBrushless);
         m_driveConfig = new SparkMaxConfig();
         m_turningConfig = new SparkMaxConfig();
-        m_driveConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(40, 40);
+        m_driveConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40, 40);
         m_turningConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(40, 40);           
         m_driveConfig.encoder.velocityConversionFactor(Constants.kDriveConversionFactor / 60.0);
         m_driveConfig.encoder.positionConversionFactor(Constants.kDriveConversionFactor);

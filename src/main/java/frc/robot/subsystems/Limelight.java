@@ -6,8 +6,8 @@ package frc.robot.subsystems;
 
 import java.util.List;
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
+// import org.photonvision.PhotonCamera;
+// import org.photonvision.PhotonUtils;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -30,7 +30,7 @@ import frc.robot.LimelightHelpers.RawFiducial;
 
 public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
-  PhotonCamera camera;
+  // PhotonCamera camera;
   DrivetrainSubsystem m_drivetrain;
   CommandXboxController xbox_controller;
   PIDController controller = new PIDController(0.1, 0, 0.001);
@@ -43,7 +43,7 @@ public class Limelight extends SubsystemBase {
     limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
   }
 
-  public double[] turnToTarget(Boolean isRightScore) {
+  // public double[] turnToTarget(Boolean isRightScore) {
     // thetaController.setSetpoint(Constants.ROT_SETPOINT_REEF_ALIGNMENT);
     // thetaController.setTolerance(Constants.ROT_TOLERANCE_REEF_ALIGNMENT);
 
@@ -53,38 +53,38 @@ public class Limelight extends SubsystemBase {
     // yController.setSetpoint(isRightScore ? Constants.Y_SETPOINT_RIGHT_REEF_ALIGNMENT : Constants.Y_SETPOINT_LEFT_REEF_ALIGNMENT);
     // yController.setTolerance(Constants.Y_TOLERANCE_REEF_ALIGNMENT);
 
-    // if (LimelightHelpers.getTV("limelight")) {
-    //   double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
-    //   // Pose3d bot = LimelightHelpers.getBotPose3d_wpiBlue("limelight");
-    //   Pose3d ttr = LimelightHelpers.getBotPose3d_TargetSpace("limelight");
-    //   double[] speeds = {xController.calculate(ttr.getZ()), yController.calculate(ttr.getX()), thetaController.calculate(s[4])};
-    //   return speeds;
-    // }
+  //   if (LimelightHelpers.getTV("limelight")) {
+  //     double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
+  //     // Pose3d bot = LimelightHelpers.getBotPose3d_wpiBlue("limelight");
+  //     Pose3d ttr = LimelightHelpers.getBotPose3d_TargetSpace("limelight");
+  //     double[] speeds = {xController.calculate(ttr.getZ()), yController.calculate(ttr.getX()), thetaController.calculate(s[4])};
+  //     return speeds;
+  //   }
 
 
-    double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
-      // Pose3d bot = LimelightHelpers.getBotPose3d_wpiBlue("limelight");
-    Pose3d ttr = LimelightHelpers.getBotPose3d_TargetSpace("limelight");
-    double angle = s[4] - 4.6;
+  //   double[] s = LimelightHelpers.getBotPose_TargetSpace("limelight");
+  //     // Pose3d bot = LimelightHelpers.getBotPose3d_wpiBlue("limelight");
+  //   Pose3d ttr = LimelightHelpers.getBotPose3d_TargetSpace("limelight");
+  //   double angle = s[4] - 4.6;
     
-    if(LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight").tagCount > 0){
-      if (xbox_controller.getHID().getLeftBumperButton()){
-        // System.out.println(controller2.calculate(0, -ttr.getX()-0.18));
-        // System.out.println(controller.calculate(angle, 0));
-        double[] speeds = {controller2.calculate(0, ttr.getZ()+0.45), controller2.calculate(0, -ttr.getX()-.24), controller.calculate(angle, 0)};
-        return speeds;
+  //   // if(LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight").tagCount > 0){
+  //   //   if (xbox_controller.getHID().getLeftBumperButton()){
+  //   //     // System.out.println(controller2.calculate(0, -ttr.getX()-0.18));
+  //   //     // System.out.println(controller.calculate(angle, 0));
+  //   //     double[] speeds = {controller2.calculate(0, ttr.getZ()+0.45), controller2.calculate(0, -ttr.getX()-.24), controller.calculate(angle, 0)};
+  //   //     return speeds;
         
-      }
-      else if (xbox_controller.getHID().getRightBumperButton()) {
-        double[] speeds = {controller2.calculate(0, ttr.getZ()+0.45), controller2.calculate(0, -ttr.getX()+.02), controller.calculate(angle, 0)};
+  //   //   }
+  //   //   else if (xbox_controller.getHID().getRightBumperButton()) {
+  //   //     double[] speeds = {controller2.calculate(0, ttr.getZ()+0.45), controller2.calculate(0, -ttr.getX()+.02), controller.calculate(angle, 0)};
 
 
       
-        return speeds;
-     }
-    }
-    return null;
-  }
+  //   //     return speeds;
+  //    }
+  //   }
+  //   return null;
+  // }
   
 
   @Override

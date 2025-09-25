@@ -98,15 +98,15 @@ public final class Constants {
       
   public static final boolean kGyroReversed = false;
 
-  public static final double kDriveP = 0.05;
+  public static final double kDriveP = 0.000000000000001; //Usually 0.05, 0.000000000000001?
   public static final double kDriveI = 0.0;
-  public static final double kDriveD = 0.0;
+  public static final double kDriveD = 0.9; //Usually 0.0, 0.9;?
   public static final double kDriveFF = 0.1;
   public static final double SLEW_RATE_LIMITER = 3;
 
-  public static final double kTurningP = 0.04;
+  public static final double kTurningP = 0.005; //Usually 0.05
   public static final double kTurningI = 0.0;
-  public static final double kTurningD = 0.0005;
+  public static final double kTurningD = 0.05;
   public static final double kAcceleration = 4;
 
   public static final int RESET_NAVX_BUTTON = 8;
@@ -135,25 +135,25 @@ public final class Constants {
     public static final int ELEVATOR_ENCODER = 8;
     public static final double ELEVATOR_OFFSET = 0.331;  
 
-    public static final double ELEVATOR_LEFT_INTAKE_SETPOINT = 14.3;
+    public static final double ELEVATOR_LEFT_INTAKE_SETPOINT = 13.212891;
     public static final double ELEVATOR_LEFT_STOWED_SETPOINT = 0.385254;
-    public static final double ELEVATOR_LEFT_L1_SETPOINT = 9.886230; 
-    public static final double ELEVATOR_LEFT_L2_SETPOINT = 24.973730;
-    public static final double ELEVATOR_LEFT_L3_SETPOINT = 44.87;
+    public static final double ELEVATOR_LEFT_L1_SETPOINT = 10.768750; 
+    public static final double ELEVATOR_LEFT_L2_SETPOINT = 22.015137;
+    public static final double ELEVATOR_LEFT_L3_SETPOINT = 40.010254; //previously 39.010254
     // public static final double ELEVATOR_LEFT_L4_SETPOINT = 0;
-    public static final double ELEVATOR_LEFT_ALGAE_LOW_SETPOINT = 31.122559; 
-    public static final double ELEVATOR_LEFT_ALGAE_HIGH_SETPOINT = 47.034668;
-    public static final double ELEVATOR_LEFT_PROCESSOR_SETPOINT = 0.385254;
+    public static final double ELEVATOR_LEFT_ALGAE_LOW_SETPOINT = 25.516602; 
+    public static final double ELEVATOR_LEFT_ALGAE_HIGH_SETPOINT = 46.582520;
+    public static final double ELEVATOR_LEFT_PROCESSOR_SETPOINT = 0.285254;
 
-    public static final double ELEVATOR_RIGHT_INTAKE_SETPOINT = -14.3;
+    public static final double ELEVATOR_RIGHT_INTAKE_SETPOINT = -13.25820;
     public static final double ELEVATOR_RIGHT_STOWED_SETPOINT = -0.442383;
-    public static final double ELEVATOR_RIGHT_L1_SETPOINT = -9.911133;
-    public static final double ELEVATOR_RIGHT_L2_SETPOINT = -24.961563;
-    public static final double ELEVATOR_RIGHT_L3_SETPOINT = -42.04;
+    public static final double ELEVATOR_RIGHT_L1_SETPOINT = -10.764844;
+    public static final double ELEVATOR_RIGHT_L2_SETPOINT = -22.112305;
+    public static final double ELEVATOR_RIGHT_L3_SETPOINT = -40.010254;
     
     // public static final double ELEVATOR_RIGHT_L4_SETPOINT = 0;
-    public static final double ELEVATOR_RIGHT_ALGAE_LOW_SETPOINT = -31.146973;  
-    public static final double ELEVATOR_RIGHT_ALGAE_HIGH_SETPOINT = -47.015137;
+    public static final double ELEVATOR_RIGHT_ALGAE_LOW_SETPOINT = -25.616211;  
+    public static final double ELEVATOR_RIGHT_ALGAE_HIGH_SETPOINT = -46.680176;
     public static final double ELEVATOR_RIGHT_PROCESSOR_SETPOINT = -0.442383;
 
     public static final double ELEVATOR_RESET_CURRENT = 3;
@@ -167,13 +167,13 @@ public final class Constants {
     public static final int PIVOT_ENCODER = 4;
     public static final double PIVOT_OFFSET = 0.331;
 
-    public static final double PIVOT_INTAKE_SETPOINT = 9.84;
+    public static final double PIVOT_INTAKE_SETPOINT = 12.5; //previously 9.84
     public static final double PIVOT_STOWED_SETPOINT = 0;
-    public static final double PIVOT_L1_SETPOINT = 18.78;
-    public static final double PIVOT_L2_SETPOINT = 25.0;
-    public static final double PIVOT_L3_SETPOINT = 25.63;
-    public static final double PIVOT_ALGAE_LOW_SETPOINT = 25.13;
-    public static final double PIVOT_ALGAE_HIGH_SETPOINT = 23.57;
+    public static final double PIVOT_L1_SETPOINT = 21.735352;
+    public static final double PIVOT_L2_SETPOINT = 24.019531;
+    public static final double PIVOT_L3_SETPOINT = 24.235352; //previously 26.235352
+    public static final double PIVOT_ALGAE_LOW_SETPOINT = 21.556152;
+    public static final double PIVOT_ALGAE_HIGH_SETPOINT = 24.415527;
     public static final double PIVOT_CLIMB_SETPOINT = 28.8;
     public static final double PIVOT_MIN_THRESHOLD = 5;
     public static final double PIVOT_RESET_CURRENT = 4;

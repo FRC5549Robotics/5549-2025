@@ -47,12 +47,14 @@ import edu.wpi.first.wpilibj.DriverStation;
  * the TimedRobot documentation. If you change the name of this class or the package after creating
  * this project, you must also update the Main.java file in the project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   private final RobotContainer m_robotContainer;
   CameraServer cameraServer;
   UsbCamera cam;
   Command m_autonomousCommand;
   NetworkTableEntry cameraNet;
+  private Spark motor;
+
   public Robot() {
     
 
@@ -67,7 +69,6 @@ public class Robot extends TimedRobot {
 //   UsbCamera cam;
 //   Command m_autonomousCommand;
 //   NetworkTableEntry cameraNet;
-//   private Spark motor;
 //   public Robot() {
 //      // 0 is the RIO PWM port this is connected to
     
@@ -76,68 +77,68 @@ public class Robot extends TimedRobot {
 //     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
 //     // autonomous chooser on the dashboard.
 
-//     if (isReal()) {
-//       Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
-//       Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-//       new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
-//     } 
-//     else {
-//       setUseTiming(false); // Run as fast as possible
-//       String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-//       Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-//       Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-//     }
-//     Logger.start();
+    if (isReal()) {
+      Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs")); // Log to a USB stick ("/U/logs")
+      Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+      new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+    } 
+    else {
+      setUseTiming(false); // Run as fast as possible
+      String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+      Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+      Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+    }
+    Logger.start();
 
-//     Logger.recordMetadata("ProjectName",  BuildConstants.MAVEN_NAME);
-//     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-//     Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-//     Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-//     Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
-//     switch (BuildConstants.DIRTY) {
-//       case 0:
-//         Logger.recordMetadata("GitDirty", "All changes committed");
-//         break;
-//       case 1:
-//         Logger.recordMetadata("GitDirty", "Uncomitted changes");
-//         break;
-//       default:
-//         Logger.recordMetadata("GitDirty", "Unknown");
-//         break;
-//     }
+    Logger.recordMetadata("ProjectName",  BuildConstants.MAVEN_NAME);
+    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    switch (BuildConstants.DIRTY) {
+      case 0:
+        Logger.recordMetadata("GitDirty", "All changes committed");
+        break;
+      case 1:
+        Logger.recordMetadata("GitDirty", "Uncomitted changes");
+        break;
+      default:
+        Logger.recordMetadata("GitDirty", "Unknown");
+        break;
+    }
 
-//     // Set up data receivers & replay source
-//     switch (Constants.currentMode) {
-//       case REAL:
-//         // Running on a real robot, log to a USB stick ("/U/logs")
-//         Logger.addDataReceiver(new WPILOGWriter());
-//         Logger.addDataReceiver(new NT4Publisher());
-//         break;
+    // Set up data receivers & replay source
+    switch (Constants.currentMode) {
+      case REAL:
+        // Running on a real robot, log to a USB stick ("/U/logs")
+        Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs"));
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
 
-//       case SIM:
-//         // Running a physics simulator, log to NT
-//         Logger.addDataReceiver(new NT4Publisher());
-//         break;
+      case SIM:
+        // Running a physics simulator, log to NT
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
 
-//       case REPLAY:
-//         // Replaying a log, set up replay source
-//         setUseTiming(false); // Run as fast as possible
-//         String logPath = LogFileUtil.findReplayLog();
-//         Logger.setReplaySource(new WPILOGReader(logPath));
-//         Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
-//         break;
-//     }
+      case REPLAY:
+        // Replaying a log, set up replay source
+        setUseTiming(false); // Run as fast as possible
+        String logPath = LogFileUtil.findReplayLog();
+        Logger.setReplaySource(new WPILOGReader(logPath));
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        break;
+    }
 
-//     // Initialize URCL
-//     Logger.registerURCL(URCL.startExternal());
+    // Initialize URCL
+    Logger.registerURCL(URCL.startExternal());
 
-//     // Start AdvantageKit logger
-//     Logger.start();  // Start logging! No more data receivers, replay sources, or metadata values may be added.
-//     cam = CameraServer.startAutomaticCapture(0);
-//     motor = new Spark(0); 
-//     // CvSink sink  = CameraServer.getVideo();
-//     // Mat mat = sink.getDirectMat();
-//     // mat.
+    // Start AdvantageKit logger
+    Logger.start();  // Start logging! No more data receivers, replay sources, or metadata values may be added.
+    cam = CameraServer.startAutomaticCapture(0);
+    motor = new Spark(0); 
+    // CvSink sink  = CameraServer.getVideo();
+    // Mat mat = sink.getDirectMat();
+    // mat.
     
 
 
